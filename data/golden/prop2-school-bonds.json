@@ -44,6 +44,44 @@
         "pa": "ਬਾਂਡ ਦੀ ਅਦਾਇਗੀ ਵਿੱਚ 35 ਸਾਲਾਂ ਤੱਕ ਹਰ ਸਾਲ ਲਗਭਗ 500 ਮਿਲੀਅਨ ਡਾਲਰ ਖਰਚ ਹੋਣਗੇ।",
         "zh": "偿还这笔债券每年将花费约5亿美元，持续35年。"
       }
+    },
+    {
+      "id": "c4",
+      "kind": "impact_pass",
+      "citation": {
+        "source_file": "ca-voter-guide-2024-general.pdf",
+        "page": [
+          4,
+          15
+        ]
+      },
+      "text": {
+        "en": "If the measure passes, the state issues $10 billion in bonds to repair and upgrade K–12 schools and community colleges — and pays about $500 million a year for 35 years to repay them.",
+        "es": "Si se aprueba la medida, el estado emite $10 mil millones en bonos para reparar y modernizar escuelas K–12 y colegios comunitarios — y paga unos $500 millones al año durante 35 años para devolverlos.",
+        "hi": "यदि यह उपाय पारित होता है, तो राज्य K–12 स्कूलों और सामुदायिक कॉलेजों की मरम्मत और उन्नयन के लिए $10 अरब के बॉन्ड जारी करता है — और उन्हें चुकाने के लिए 35 वर्षों तक हर साल लगभग $500 मिलियन का भुगतान करता है।",
+        "pa": "ਜੇਕਰ ਇਹ ਉਪਾਅ ਪਾਸ ਹੁੰਦਾ ਹੈ, ਤਾਂ ਰਾਜ K–12 ਸਕੂਲਾਂ ਅਤੇ ਕਮਿਊਨਿਟੀ ਕਾਲਜਾਂ ਦੀ ਮੁਰੱਮਤ ਅਤੇ ਉੱਨਤੀ ਲਈ $10 ਅਰਬ ਦੇ ਬਾਂਡ ਜਾਰੀ ਕਰਦਾ ਹੈ — ਅਤੇ ਉਨ੍ਹਾਂ ਦੀ ਅਦਾਇਗੀ ਲਈ 35 ਸਾਲਾਂ ਤੱਕ ਹਰ ਸਾਲ ਲਗਭਗ $500 ਮਿਲਿਅਨ ਦਾ ਭੁਗਤਾਨ ਕਰਦਾ ਹੈ।",
+        "zh": "如果该措施通过，加州将发行 100 亿美元债券用于维修和升级 K–12 学校及社区学院 — 并在 35 年内每年支付约 5 亿美元用于偿还。",
+        "fa": "اگر این اقدام تصویب شود، ایالت ۱۰ میلیارد دلار اوراق قرضه برای تعمیر و نوسازی مدارس K–12 و کالج‌های محلی منتشر می‌کند — و برای بازپرداخت آن‌ها ۳۵ سال سالانه حدود ۵۰۰ میلیون دلار می‌پردازد."
+      }
+    },
+    {
+      "id": "c5",
+      "kind": "impact_fail",
+      "citation": {
+        "source_file": "ca-voter-guide-2024-general.pdf",
+        "page": [
+          4,
+          15
+        ]
+      },
+      "text": {
+        "en": "If the measure does not pass, the $10 billion in bonds for K–12 schools and community colleges is not issued, and the state does not take on repaying the bond at about $500 million a year for 35 years.",
+        "es": "Si no se aprueba la medida, los $10 mil millones en bonos para escuelas K–12 y colegios comunitarios no se emiten, y el estado no asume la devolución del bono de unos $500 millones al año durante 35 años.",
+        "hi": "यदि यह उपाय पारित नहीं होता है, तो K–12 स्कूलों और सामुदायिक कॉलेजों के लिए $10 अरब के बॉन्ड जारी नहीं किए जाते, और राज्य 35 वर्षों तक हर साल लगभग $500 मिलियन की दर से बॉन्ड की चुकौती नहीं उठाता।",
+        "pa": "ਜੇਕਰ ਇਹ ਉਪਾਅ ਪਾਸ ਨਹੀਂ ਹੁੰਦਾ, ਤਾਂ K–12 ਸਕੂਲਾਂ ਅਤੇ ਕਮਿਊਨਿਟੀ ਕਾਲਜਾਂ ਲਈ $10 ਅਰਬ ਦੇ ਬਾਂਡ ਜਾਰੀ ਨਹੀਂ ਕੀਤੇ ਜਾਂਦੇ, ਅਤੇ ਰਾਜ 35 ਸਾਲਾਂ ਤੱਕ ਹਰ ਸਾਲ ਲਗਭਗ $500 ਮਿਲਿਅਨ ਦੀ ਦਰ ਨਾਲ ਬਾਂਡ ਦੀ ਅਦਾਇਗੀ ਨਹੀਂ ਚੁੱਕਦਾ।",
+        "zh": "如果该措施未通过，用于 K–12 学校及社区学院的 100 亿美元债券将不发行，加州也不承担以每年约 5 亿美元、为期 35 年偿还该债券的责任。",
+        "fa": "اگر این اقدام تصویب نشود، اوراق قرضه ۱۰ میلیارد دلاری برای مدارس K–12 و کالج‌های محلی منتشر نمی‌شود و ایالت بازپرداخت اوراق را با نرخ حدود ۵۰۰ میلیون دلار در سال به مدت ۳۵ سال بر عهده نمی‌گیرد."
+      }
     }
   ],
   "id": "prop2-school-bonds",

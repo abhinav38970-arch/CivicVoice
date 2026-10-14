@@ -18,15 +18,28 @@ Notes for Abhinav before you submit:
 
 ## (a) What the app does
 
-**CivicVoice is a web app that turns public civic documents into plain-language summaries
-in six languages, with every sentence cited to its source page.** A resident picks their
-language first (English, Hindi, Punjabi, Mandarin, Spanish, or Farsi), taps a featured
-card — "🗳️ What's on the ballot?" or "🏛️ Council labor talks" — and gets a short,
-plain-language summary of the relevant public documents. Every claim in the summary
-carries a 📄 citation; clicking it opens a side panel showing the exact source chunk —
-file, page, section, full text — so anyone can verify each sentence against the document
-it came from. A "How we check our work" panel shows how every response was validated.
-By design, CivicVoice *describes* civic documents and never tells anyone how to vote.
+**CivicVoice is a web app that turns public civic documents into plain-language
+summaries in six languages, with every sentence cited to its source page.** The app
+opens on a language gatekeeper — six buttons in native scripts (English, Español,
+हिन्दी, ਪੰਜਾਬੀ, 中文, فارسی) and essentially zero English — and once you choose, every
+heading, button, placeholder, and navigation label flips to your language.
+
+A resident taps a featured card — "🗳️ What's on the ballot?" or "🏛️ Council labor
+talks" — and gets a short, plain-language summary of the relevant public documents,
+grouped into Summary / If it passes / If it fails for ballot measures. (Pass/fail
+impacts exist only where the official voter guide supports them, are descriptive, and
+are cited like everything else — CivicVoice *describes* civic documents and never
+tells anyone how to vote.) Every claim carries a 📄 citation; clicking it opens a
+side panel showing the exact source chunk — file, page, section, full text — so anyone
+can verify each sentence against the document it came from. A speaker button reads any
+summary aloud in the chosen language; a mic button takes voice input. A "Local
+notices" feed surfaces official City of Fremont announcements with their dates.
+A "Report a neighborhood issue" flow lets a resident pick pothole / illegal dumping /
+broken streetlight, describe it in their own language, attach GPS with permission, and
+get a copy-ready structured report to take to fremont.gov — the app is explicit that
+it submits nothing to the city itself. A "How we check our work" panel shows how
+every response was validated: 114 hand-verified claims across 6 languages, all
+grounded in cited source text, 0 advisory flags.
 
 ## (b) Who it's for
 

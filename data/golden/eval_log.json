@@ -210,49 +210,49 @@
  ],
  "per_language": {
   "en": {
-   "claims": 15,
-   "grounded": 15,
-   "evaluated": 15,
+   "claims": 19,
+   "grounded": 19,
+   "evaluated": 19,
    "cross_lingual_unevaluated": 0,
    "advisory_flags_total": 0,
    "grounding_rate_on_evaluated": 1.0
   },
   "hi": {
-   "claims": 15,
-   "grounded": 15,
-   "evaluated": 15,
+   "claims": 19,
+   "grounded": 19,
+   "evaluated": 19,
    "cross_lingual_unevaluated": 0,
    "advisory_flags_total": 0,
    "grounding_rate_on_evaluated": 1.0
   },
   "pa": {
-   "claims": 15,
-   "grounded": 15,
-   "evaluated": 15,
+   "claims": 19,
+   "grounded": 19,
+   "evaluated": 19,
    "cross_lingual_unevaluated": 0,
    "advisory_flags_total": 0,
    "grounding_rate_on_evaluated": 1.0
   },
   "zh": {
-   "claims": 15,
-   "grounded": 15,
-   "evaluated": 15,
+   "claims": 19,
+   "grounded": 19,
+   "evaluated": 19,
    "cross_lingual_unevaluated": 0,
    "advisory_flags_total": 0,
    "grounding_rate_on_evaluated": 1.0
   },
   "es": {
-   "claims": 15,
-   "grounded": 15,
-   "evaluated": 15,
+   "claims": 19,
+   "grounded": 19,
+   "evaluated": 19,
    "cross_lingual_unevaluated": 0,
    "advisory_flags_total": 0,
    "grounding_rate_on_evaluated": 1.0
   },
   "fa": {
-   "claims": 15,
-   "grounded": 15,
-   "evaluated": 15,
+   "claims": 19,
+   "grounded": 19,
+   "evaluated": 19,
    "cross_lingual_unevaluated": 0,
    "advisory_flags_total": 0,
    "grounding_rate_on_evaluated": 1.0

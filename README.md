@@ -2,7 +2,10 @@
 
 **CivicVoice is a web app that turns public civic documents — California voter guides,
 Fremont city-council agendas — into plain-language summaries in six languages, with
-every sentence cited to its source page.** Congressional App Challenge 2026, CA-14.
+every sentence cited to its source page.** It opens on a language gatekeeper (zero
+English until you choose), reads summaries aloud, takes voice input, shows local
+notices, and builds copy-ready neighborhood issue reports. Congressional App Challenge
+2026, CA-14.
 
 ## Who it's for
 
@@ -51,9 +54,34 @@ same for missing `data/parsed/`. `/tmp` too small for the torch wheel?
                      eval.py ──▶ citation validity / grounding / advisory flags
                                         │
                                         ▼
-                          app.py ──▶ UI: claims + clickable 📄 citations
+                          app.py ──▶ UI: gatekeeper → cards + notices + 311
+                                     + TTS/STT (Web Speech API, no key)
+                                     + claims + clickable 📄 citations
                                      + "How we check our work" panel
+                          i18n.py ──▶ 59 UI strings × 6 languages (flip 100% of chrome)
 ```
+
+### Feature notes (all client-side honest, no external APIs)
+
+- **Language gatekeeper:** first screen is six native-script buttons and essentially
+  zero English; the choice persists in `localStorage` and `applyLanguage()` re-renders
+  every heading, button, placeholder, and the source drawer. Farsi sets `lang="fa"`
+  (RTL-ready styling via the `lang` attribute).
+- **Ballot pass/fail impacts:** featured ballot cards group claims into Summary /
+  If it passes / If it fails. Impact claims exist only where the official voter guide
+  supports them (Prop 1, Prop 2), are descriptive (never "vote yes/no"), and are
+  evaluated like every other claim (114/114 grounded, 0 advisory flags).
+- **Local notices:** `/api/notices` serves the 8 City of Fremont press releases in the
+  corpus with title + date; tapping one opens the exact source chunk. Labeled as dated
+  records, never "live alerts".
+- **311 tap-to-report (honest):** pick pothole / illegal dumping / broken streetlight,
+  describe it in your language (typed or voice), optionally attach GPS, and the app
+  builds a copy-ready structured report and hands off to fremont.gov. **CivicVoice
+  never submits anything to the city** — there is no verified Fremont submission API,
+  and the UI says so.
+- **Speech:** summaries read aloud via `speechSynthesis` and voice input via
+  `SpeechRecognition`, both in the chosen language's BCP-47 locale. No key, no
+  network. The mic button hides itself where the API is unsupported.
 
 ## How verification works
 
@@ -76,13 +104,21 @@ Perso-Arabic), and advisory-language flags, with a PASS/FAIL verdict. Weak retri
 - Advisory detection is substring matching; paraphrased voting advice walks through.
 - Non-English grounding validates content via English source text, not translation
   quality. Translation fluency and reading level are untested.
+- UI translations in `i18n.py` (including all pass/fail impact claims) are drafts —
+  not native-speaker reviewed. The eval harness confirms the *content* is grounded in
+  official sources; it does not judge fluency.
 - Retrieval is measured, not solved: some council queries score 0.29–0.40.
+- The notices feed is 8 dated press releases (Mar 2025–Aug 2026), not a live alert
+  system; the corpus needs a monthly refresh to stay current.
+- The 311 flow builds a report for the resident to copy — it does not file anything
+  with the city, and says so on screen.
 - Full accounting: `EVAL_REPORT.md`. Fix history: `FIXES.md`.
 
 ## Project structure
 
 ```
 app.py / templates/ / static/   demo web app (Flask, no build step)
+i18n.py                       59 UI strings × 6 languages + speech locales
 retriever.py                    local-embedding retrieval (retrieve(query, k))
 summarizer.py / llm_client.py   citation-grounded summarizer, OpenAI-compatible
 eval.py / advisory.py           accuracy harness + advisory-language patterns
@@ -90,6 +126,7 @@ scraper.py / parser.py          PDF download + text extraction pipeline
 prompts/                        editable system/user prompts
 data/parsed/                    1,258 chunks (49 files, SHA-256 manifest-guarded)
 data/golden/                    5 hand-verified featured examples × 6 languages
+                                (114 claims incl. pass/fail impacts, eval PASS)
 tests/                          retrieval golden tests (pytest)
 demo/VIDEO_SCRIPT.md            90-second demo storyboard
 SUBMISSION.md                   CAC submission draft (student reviews before filing)

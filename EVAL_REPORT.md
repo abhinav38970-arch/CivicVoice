@@ -143,3 +143,32 @@ been run in this project.
   (`pytest tests/test_retrieval_golden.py`, or plain `python`)
 - `data/SOURCE_MANIFEST.json` — corpus allowlist enforced by
   `retriever.load_chunks()`
+
+---
+
+## 8. Addendum — Full honest build (2026-10-14)
+
+**New claims:** 4 pass/fail impact claims added to the golden set (Prop 1 c4/c5,
+Prop 2 c4/c5, `kind: impact_pass` / `impact_fail`), each translated by hand into
+all 6 languages. Pass/fail claims are descriptive entailments of the official voter
+guide text (e.g. "if it passes, the state issues $X in bonds and pays $Y/year to
+repay them"), never voting advice — 0 advisory flags across all languages.
+
+**One failure found and fixed:** the first draft of Prop 2's Spanish fail-claim
+grounded at 0.091 against its cited chunk (below the 0.15 threshold) — the English
+source wording shared too little vocabulary with the chunk text. The EN claim was
+rewritten with source-grounded terms and all 5 translations redone; a per-claim
+re-run across all 6 languages × all claims then showed **0 ungrounded**.
+
+**Final numbers (`python gen_eval_log.py`, deterministic, no LLM):**
+
+- Claims: **114** (19 per language × 6 languages)
+- Grounded: **114/114**
+- Advisory flags: **0**
+- Entry verdicts: 5 entries × 6 languages = **30/30 PASS**
+- `eval.py` self-tests: **11/11 PASS** (unchanged)
+
+**What this still does not prove:** the non-English impact claims are scored via
+their `claim_en` against English chunk text — overlap proves the *content* is in the
+source, not that the translation is faithful or fluent. UI strings in `i18n.py` are
+drafts, not native-speaker reviewed.

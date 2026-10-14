@@ -215,3 +215,65 @@ Verified flaws found and fixed in this round:
   "90/90 PASS" is visible without clicking.
 - Running total: 7 independent judging passes (2 re-review, 3 cold, 2 final),
   7 YES, 0 NO.
+
+---
+
+## Full honest build (2026-10-14) — gatekeeper, speech, notices, 311, pass/fail
+
+**Scope decision:** Abhinav chose the "full honest build" — every requested feature
+shipped, each with its honesty constraint intact (no fake 311 submission, no fake
+translation integration, no live-alert claims, pass/fail only where the official
+guide supports it). Built on branch `feature/honest-build`.
+
+### What shipped
+
+1. **Language gatekeeper** (`templates/index.html`): first screen is six native-script
+   buttons with essentially zero English; choice persists in `localStorage`.
+2. **`i18n.py`**: 59 UI strings × 6 languages (en/es/hi/pa/zh/fa) + BCP-47 speech
+   locales. `applyLanguage()` re-renders 100% of chrome — headings, buttons,
+   placeholders, footer, source drawer, and all JS-generated strings. Every key used
+   in the template verified present in all 6 languages by script (0 missing).
+3. **TTS/STT** (Web Speech API, no key, no network): speaker button reads summaries
+   aloud in the chosen language; mic button on the ask box takes voice input. Mic
+   hides itself where `SpeechRecognition` is unsupported.
+4. **Local notices** (`/api/notices`): 8 City of Fremont press releases from the
+   corpus with title + date; tap opens the exact source chunk. Labeled dated, never
+   "live".
+5. **311 tap-to-report (honest):** pothole / illegal dumping / broken streetlight
+   icons, native-language description, GPS with permission, copy-ready structured
+   report, handoff to fremont.gov. UI explicitly states CivicVoice submits nothing.
+6. **Ballot pass/fail impacts:** Prop 1 + Prop 2 cards group claims into
+   Summary / If it passes / If it fails. 4 new claims, all 6 languages, verified by
+   `gen_eval_log.py` like every other claim.
+
+### Bugs found and fixed during the build
+
+- **i18n.py shipped with a syntax error** (literal CJK chars inside a `\u` escape in
+  the zh `describePlaceholder`): caught by import check before any template render,
+  fixed, then key-count parity asserted across all 6 languages (59/59/59/59/59/59).
+- **One Spanish fail-claim grounded at 0.091** (below the 0.15 threshold): prop2 c5's
+  English source text shared too little vocabulary with the cited chunk. Rewrote the
+  EN claim with source-grounded terms ("K–12 schools and community colleges",
+  "repaying the bond at about $500 million a year for 35 years") and re-translated
+  all 5 languages; re-ran per-claim eval across all 6 languages × all claims:
+  **0 ungrounded**.
+- **Stale Flask on :5000 during render check:** an old process was serving the
+  pre-feature build; new instance refused the port with the app's own "port in use"
+  message. Restarted on :5001 — no code change needed.
+
+### Verification (all green, 2026-10-14)
+
+- `eval.py` self-tests: **11/11 PASS**
+- Featured evaluation (`gen_eval_log.py`): **114/114 claims grounded, 0 advisory
+  flags**, all 5 entries × 6 languages PASS
+- `pytest tests/`: **3/3 PASS** (incl. 9 retrieval goldens)
+- Live render check (browser task): gatekeeper zero-English, full Spanish/Hindi
+  flip, pass/fail groups, citation drawer, notices, 311 section — CONFIRMED
+- Cold code review: **FIX-first → both fixes shipped.** A zero-context reviewer found
+  2 real issues: (1) Farsi had no RTL handling — fixed with
+  `document.documentElement.dir` in `applyLanguage()`; (2) the notices feed needed
+  an explicit "Saved archive, not live alerts" label — appended to `noticesSub` in
+  all 6 languages. Also fixed: English `aria-label`/`title` leaks on the gatekeeper,
+  silent GPS/notices failures (now show localized messages), and dead code
+  (`answerTitle` key, unused `claimEl` param). Key audit after fixes: 60/60 keys ×
+  6 languages, zero missing, zero unused.

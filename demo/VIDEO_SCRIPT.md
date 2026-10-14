@@ -1,8 +1,9 @@
 # CivicVoice — Demo Video Script (90 seconds)
 
 **Purpose:** CAC 2026 submission video (1–3 min requirement). Runtime target: **90 seconds.**
-**Verified against the built UI (2026-10-13):** language picker first → featured
-example cards → cited summaries in 6 languages → 📄 citation side panel →
+**Verified against the built UI (2026-10-14):** language gatekeeper (zero English) →
+6-language UI flip → featured cards with Summary / If it passes / If it fails →
+📄 citation side panel → 🔊 listen button → notices feed → 311 tap-to-report →
 "How we check our work" panel → ✨ Featured example golden responses
 (hand-written, hand-verified — never presented as live model output).
 Re-confirm every click on the running app before recording.
@@ -16,80 +17,80 @@ Re-confirm every click on the running app before recording.
 > (This resolves the 64% vs 62% conflict in earlier drafts: the verified figure is **64.2%**.
 > Phrase it exactly as above — "residents age 5+", not "households.")
 
-Background stat (for SUBMISSION.md, not spoken in the video): in the Data USA PUMA covering
-Fremont's southeast, 68.3% of households report speaking a non-English language at home as
-their primary shared language; the top three are Chinese (incl. Mandarin/Cantonese),
-Hindi, and Spanish — the reason the six languages are en/hi/pa/zh/es/fa.
-Source: https://DataUSA.io/profile/geo/alameda-county-south-fremont-city-southeast-puma-ca
-
 ## Shot list + voiceover (all 90 seconds)
 
 > Formatting convention: **🎥 On screen** = exact action/click. **🎙️ Voiceover** = spoken line.
 > **⌨️ Callout** = on-screen text overlay to add in editing (must be legible at 1080p).
 
-### SHOT 1 — 0:00–0:15 · The hook (face to camera)
+### SHOT 1 — 0:00–0:12 · The hook (face to camera)
 
 🎥 Face to camera. In Abhinav's hand (or on a desk prop): a printed California Voter
 Information Guide — dense, small print. He sets it down / taps it.
 
-🎙️ "This is the California Voter Information Guide. It's dense legal English, written
-at a level most residents can't parse. And in my city, Fremont, 64.2% of residents
-speak a language other than English at home — so for most of my neighbors, this might
-as well not exist."
+🎙️ "This is the California Voter Information Guide. It's dense legal English. And in my
+city, Fremont, 64.2% of residents speak a language other than English at home — so for
+most of my neighbors, this might as well not exist."
 
 ⌨️ Callout (lower third, hold 4s):
 "64.2% of Fremont residents age 5+ speak a language other than English at home
 — U.S. Census Bureau QuickFacts, 2020–2024"
 
-🎥 Cut to: laptop screen, browser open to CivicVoice at http://127.0.0.1:5000 (or the
-deployed URL). The language picker is the FIRST thing on the page.
+### SHOT 2 — 0:12–0:35 · The gatekeeper (zero English)
 
-### SHOT 2 — 0:15–0:45 · The magic (one click, her language)
+🎥 Screen recording, fresh browser profile (clear localStorage first so the gatekeeper
+shows). The FIRST screen: six big buttons in native scripts — English, Español,
+हिन्दी, ਪੰਜਾਬੀ, 中文, فارسی — and nothing else. No English explanatory copy.
 
-🎥 Screen recording, cursor visible. **Exact clicks:**
-1. Click the language picker → select **हिन्दी (Hindi)**.
-2. Click the featured card **"🗳️ Prop 1: housing bond (Nov 2026)"** — the current
-   election's lead measure (✨ Featured example). (Alternate: "🗳️ What's on the
-   ballot?" — the 2024 Prop 2 card. Prefer the Nov 2026 card: the election is
-   three weeks away.)
-3. Summary renders: 3 plain-language claims in real Devanagari script, each claim
-   carrying a **📄 citation** (source file + page).
+**Exact clicks:**
+1. Click **हिन्दी**.
+2. The whole page flips to Hindi — headings, buttons, placeholders, footer.
+3. Click the featured card **"🗳️ Prop 1: housing bond (Nov 2026)"**.
 
-🎙️ "So I built CivicVoice. You pick your language first — say Hindi — and tap one card.
-That's it. No question to write, no settings to figure out. You get a plain-language
-summary of what's on the ballot — in Hindi — and every single sentence is cited to the
-exact page it came from."
+🎙️ "So I built CivicVoice. The first screen doesn't even speak English — you tap your
+language, and the entire app flips. Tap one card, and you get what's on the ballot in
+Hindi: a summary, what happens if it passes, what happens if it fails."
 
-⌨️ Callout: "✨ Featured example — hand-verified golden response"
-⌨️ Zoom-in cutaway (2s): the summary clearly shows Devanagari text — real non-English
-script fills the frame, not a label.
+⌨️ Callout: "Zero English until you choose"
+⌨️ Zoom-in cutaway (2s): the pass/fail sections render in real Devanagari script —
+real non-English script fills the frame, not a label.
 
-*(Note for the editor: the on-screen Hindi copy is the hand-verified golden response
-from the eval log — Worker B's deliverable. This script does not invent that wording.)*
-
-### SHOT 3 — 0:45–1:15 · The trust (citation drill-down + the guard)
+### SHOT 3 — 0:35–0:55 · The trust (citation drill-down + listen)
 
 🎥 **Exact clicks:**
-1. Hover/click the first claim's **📄 citation** → side panel slides in showing the
-   EXACT source chunk: file name, page number, section title, and the full chunk text.
-2. Scroll briefly in the side panel to show it's real source text, not a snippet.
-3. Close panel. Scroll down to the **"How we check our work"** panel; glance at it for
-   2 seconds (technical metrics stay collapsed — the headline speaks human).
+1. Click the first claim's **📄 citation** → side panel slides in showing the EXACT
+   source chunk: file name, page number, section title, full chunk text.
+2. Close panel. Click the **🔊 Listen** button — the summary reads aloud in Hindi
+   (record the audio; it's the browser's real voice, no API key).
 
-🎙️ "But most AI summarizers invent facts. So here's the part that matters: every claim
-opens the exact source page it came from — you can check it yourself. And by design,
-CivicVoice *describes* the measure. It never tells you how to vote."
+🎙️ "Every sentence opens the exact source page it came from — check it yourself. It
+reads aloud for anyone who'd rather listen. And by design, CivicVoice *describes* the
+measure. It never tells you how to vote."
 
 ⌨️ Callout: "Every sentence traced to its source."
 ⌨️ Callout on the guard moment: "Describes — never advises."
 
-### SHOT 4 — 1:15–1:30 · The builder (face to camera) + ask
+### SHOT 4 — 0:55–1:15 · The neighborhood (311 + notices)
 
-🎥 Face to camera. The laptop behind/beside him still shows the Hindi summary.
+🎥 **Exact clicks:**
+1. Scroll to **"Report a neighborhood issue"** (Hindi UI). Tap the pothole icon,
+   type one line (or use the mic), click "Use my location" — do NOT grant location in
+   the recording; instead show the generated report text and the Copy button.
+2. Quick scroll past the **notices feed** — 8 official City of Fremont announcements
+   with dates.
+
+🎙️ "It also helps with the rest of civic life — report a pothole in your own language,
+get a ready-to-send report for the city, and see local notices. And it's honest about
+what it can't do: it never pretends to file the report for you."
+
+⌨️ Callout: "Honest about what it can't do"
+
+### SHOT 5 — 1:15–1:30 · The builder (face to camera) + ask
+
+🎥 Face to camera. The laptop behind/beside him shows the Hindi summary.
 
 🎙️ "I live in Fremont, in California's 14th district, and I built this because my
-neighbors shouldn't need perfect English to understand what's on their ballot. I'm
-Abhinav — and this is CivicVoice."
+neighbors shouldn't need perfect English to understand their ballot. I'm Abhinav —
+and this is CivicVoice."
 
 ⌨️ End card (4s): "CivicVoice — Civic documents in your language. Every claim cited,
 never advisory. Built by Abhinav Upadhyay, CA-14."
@@ -98,9 +99,9 @@ never advisory. Built by Abhinav Upadhyay, CA-14."
 
 ## The "different moment" (honesty take — record as an alternate take)
 
-Record this as a second 15-second take; it can replace Shot 3's panel glance or run as
-a mid-video beat if the main cut has room. It is the single most persuasive shot in the
-video (Judge 2, fix #7: "Nothing persuades like a refusal").
+Record this as a second 15-second take; it can replace Shot 4's notices beat if the
+main cut runs long. The single most persuasive shot in the video: "Nothing persuades
+like a refusal."
 
 🎥 **Exact clicks:**
 1. Language picker → **English** (keep it simple).
@@ -114,32 +115,31 @@ video (Judge 2, fix #7: "Nothing persuades like a refusal").
 
 ⌨️ Callout: "It refuses to invent facts."
 
-**Why this works:** most AI demos would hallucinate a fluent summary here. CivicVoice
-shows its sources and admits what it can't do. That honesty IS the product story.
-
 **Pre-flight requirement for this take:** confirm on camera that the free-form query
 returns the "Live summaries need an LLM key" state (not a fabricated summary). Never
 fake the refusal — it is the app's real designed behavior in demo mode.
 
 ## Full continuous voiceover (read-aloud copy)
 
-> "This is the California Voter Information Guide. It's dense legal English, written
-> at a level most residents can't parse. And in my city, Fremont, 64.2% of residents
-> speak a language other than English at home — so for most of my neighbors, this
-> might as well not exist.
+> "This is the California Voter Information Guide. It's dense legal English. And in my
+> city, Fremont, 64.2% of residents speak a language other than English at home — so
+> for most of my neighbors, this might as well not exist.
 >
-> So I built CivicVoice. You pick your language first — say Hindi — and tap one card.
-> That's it. No question to write, no settings to figure out. You get a plain-language
-> summary of what's on the ballot — in Hindi — and every single sentence is cited to the
-> exact page it came from.
+> So I built CivicVoice. The first screen doesn't even speak English — you tap your
+> language, and the entire app flips. Tap one card, and you get what's on the ballot
+> in Hindi: a summary, what happens if it passes, what happens if it fails.
 >
-> But most AI summarizers invent facts. So here's the part that matters: every claim
-> opens the exact source page it came from — you can check it yourself. And by design,
-> CivicVoice describes the measure. It never tells you how to vote.
+> Every sentence opens the exact source page it came from — check it yourself. It
+> reads aloud for anyone who'd rather listen. And by design, CivicVoice describes
+> the measure. It never tells you how to vote.
+>
+> It also helps with the rest of civic life — report a pothole in your own language,
+> get a ready-to-send report for the city, and see local notices. And it's honest
+> about what it can't do: it never pretends to file the report for you.
 >
 > I live in Fremont, in California's 14th district, and I built this because my
-> neighbors shouldn't need perfect English to understand what's on their ballot. I'm
-> Abhinav — and this is CivicVoice."
+> neighbors shouldn't need perfect English to understand their ballot. I'm Abhinav —
+> and this is CivicVoice."
 
 *(Abhinav: this is a draft — rewrite any line in your own words before recording. Keep
 the 64.2% stat wording and the "describes, never tells you how to vote" line intact.)*
@@ -149,17 +149,17 @@ the 64.2% stat wording and the "describes, never tells you how to vote" line int
 1. **Never show English placeholder text under a non-English language label.** Every
    non-English shot must show the real golden (hand-verified) response or real-key
    output. If a golden response isn't ready for a language, don't show that language.
-2. **The "Demo mode — mock summaries" banner must be legible on camera if it appears.**
-   Better: record only golden/real-key paths so no banner is on screen at all. Do not
-   crop or blur a banner to hide it — that's misrepresentation.
+2. **The "Demo mode" footer note must be legible on camera in at least one wide shot.**
+   Do not crop or blur it to hide it — that's misrepresentation.
 3. **Voiceover + face, never an unnarrated screen recording.** Abhinav's face opens and
    closes the video; his voice runs under every screen shot.
 4. Never claim the app covers documents it doesn't — on camera, only query the corpus
-   that exists (CA Voter Information Guides + Fremont council documents). Keep the
-   footer demo note ("featured examples are hand-verified; live summaries need an LLM
-   key") legible in at least one wide shot — never crop or hide it.
-5. Never present the "different moment" refusal as a live model run if it is the
-   app's designed decline path — it IS the designed decline path; say exactly that.
+   that exists (CA Voter Information Guides + Fremont council documents + city press
+   releases).
+5. Never present the "different moment" refusal as a live model run — it IS the
+   designed decline path; say exactly that.
 6. Don't read the stat callout off the screen — say it, then let the callout reinforce it.
 7. Keep the end card under 4 seconds and end on his name + district: judges remember
    the builder, not the tagline.
+8. Do not grant browser location permission on camera — describe the GPS step without
+   capturing real coordinates.

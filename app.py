@@ -25,6 +25,7 @@ from flask import Flask, jsonify, render_template, request
 from retriever import retrieve
 from summarizer import summarize, SUPPORTED_LANGUAGES
 from eval import evaluate
+from i18n import UI_STRINGS, SPEECH_LOCALES
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PARSED_DIR = os.path.join(BASE_DIR, "data", "parsed")
@@ -133,6 +134,8 @@ def index():
             for c in SUPPORTED_LANGUAGES
         ],
         mock_mode=MOCK_MODE,
+        ui_strings=UI_STRINGS,
+        speech_locales=SPEECH_LOCALES,
     )
 
 
@@ -170,6 +173,7 @@ def golden_entry(entry_id):
         claims.append(
             {
                 "id": c.get("id"),
+                "kind": c.get("kind", "summary"),
                 "text": texts[language] if available else texts.get("en"),
                 "language_available": available,
                 "citation": c.get("citation", {}),
@@ -279,6 +283,58 @@ def chunk():
             "num_chunks_on_page": len(matches),
         }
     )
+
+
+# ---------------------------------------------------------------------------
+# /api/notices: local notices feed from the city press-release corpus.
+# ---------------------------------------------------------------------------
+
+NOTICES_FILE = "html-fremont-press-releases.jsonl"
+
+
+def _load_notices():
+    """Parse the press-release JSONL into feed items.
+
+    Each record's text begins 'City of Fremont press release, <Month D, YYYY>:'.
+    """
+    path = os.path.join(PARSED_DIR, NOTICES_FILE)
+    items = []
+    if not os.path.isfile(path):
+        return items
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                c = json.loads(line)
+            except ValueError:
+                continue
+            text = c.get("text", "") or ""
+            date = ""
+            if text.startswith("City of Fremont press release, "):
+                date = text[len("City of Fremont press release, "):].split(":", 1)[0].strip()
+            title = (c.get("section_title") or "").replace("Press release: ", "")
+            items.append(
+                {
+                    "id": f"{c.get('source_file')}:{c.get('page')}",
+                    "source_file": c.get("source_file"),
+                    "page": c.get("page"),
+                    "title": title,
+                    "date": date,
+                    "snippet": text[:280] + ("…" if len(text) > 280 else ""),
+                }
+            )
+    return items
+
+
+@app.get("/api/notices")
+def notices():
+    """Local notices feed — official City of Fremont announcements.
+
+    Titles/dates/snippets only; full text loads via /api/chunk on tap.
+    """
+    return jsonify(_load_notices())
 
 
 # ---------------------------------------------------------------------------
