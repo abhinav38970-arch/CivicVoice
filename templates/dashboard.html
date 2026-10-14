@@ -166,6 +166,22 @@
   </main>
 </div>
 
+<!-- Floating AI chat -->
+<button id="chatFab" class="chat-fab" aria-label="Chat">💬</button>
+<div id="chatPanel" class="chat-panel" hidden role="dialog" aria-label="Chat">
+  <div class="chat-head">
+    <span class="chat-avatar">🗣️</span>
+    <span class="chat-title" data-i18n="chatTitle">Ask CivicVoice</span>
+    <button id="chatClose" type="button" aria-label="Close">✕</button>
+  </div>
+  <div id="chatMsgs" class="chat-msgs"></div>
+  <div class="chat-input-row">
+    <button id="chatMic" type="button" class="icon-btn" hidden aria-label="Speak">🎙️</button>
+    <input id="chatInput" type="text" data-i18n-ph="chatPlaceholder" placeholder="" autocomplete="off">
+    <button id="chatSend" type="button" aria-label="Send">➤</button>
+  </div>
+</div>
+
 <!-- Citation drawer -->
 <div id="drawerScrim" class="scrim" hidden></div>
 <aside id="drawer" class="drawer" hidden>
@@ -623,6 +639,116 @@ $("docFile").addEventListener("change", async () => {
     $("uploadText").textContent = "Error: " + e.message;
   }
 });
+
+// ---------- floating AI chat ----------
+let chatGreeted = false;
+function chatScroll() {
+  const m = $("chatMsgs");
+  m.scrollTop = m.scrollHeight;
+}
+function chatBubbleUser(text) {
+  const d = document.createElement("div");
+  d.className = "chat-bubble user";
+  d.textContent = text;
+  $("chatMsgs").appendChild(d);
+  chatScroll();
+}
+function chatBubbleAI() {
+  const d = document.createElement("div");
+  d.className = "chat-bubble ai";
+  $("chatMsgs").appendChild(d);
+  chatScroll();
+  return d;
+}
+function toggleChat(open) {
+  const p = $("chatPanel");
+  const willOpen = open === undefined ? p.hidden : open;
+  p.hidden = !willOpen;
+  if (willOpen && !chatGreeted) {
+    chatGreeted = true;
+    const d = chatBubbleAI();
+    d.appendChild(bi(S("chatGreeting"), EN.chatGreeting));
+  }
+  if (willOpen) setTimeout(() => $("chatInput").focus(), 100);
+  else stopSpeaking();
+}
+$("chatFab").addEventListener("click", () => toggleChat());
+$("chatClose").addEventListener("click", () => toggleChat(false));
+
+async function chatSend() {
+  const input = $("chatInput");
+  let query = input.value.trim();
+  const lang = currentLang();
+  if (!query) return;
+  input.value = "";
+  chatBubbleUser(query);
+  const typing = chatBubbleAI();
+  typing.classList.add("chat-typing");
+  typing.textContent = S("chatTyping");
+
+  let qEn = query;
+  if (lang !== "en" && window.TRANSLATE_ON) {
+    const t = await tr(query, "en", lang);
+    if (t) qEn = t;
+  }
+  try {
+    const res = await fetch("/api/ask", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({query: qEn, language: "en", k: 5}),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "request failed");
+    typing.classList.remove("chat-typing");
+    typing.innerHTML = "";
+    let speakLine = [];
+    if (data.mode === "mock_sources") {
+      const p = document.createElement("p");
+      p.textContent = data.message;
+      typing.appendChild(p);
+      speakLine.push(data.message);
+      for (const s of data.sources.slice(0, 3)) {
+        typing.appendChild(citationEl(s));
+      }
+    } else {
+      const claims = data.summary || [];
+      if (lang !== "en" && window.TRANSLATE_ON) {
+        for (const c of claims) {
+          const t = await tr(c.claim || c.text, lang, "en");
+          if (t) c.text_mt = t;
+        }
+      }
+      const ol = document.createElement("ol");
+      ol.className = "claims";
+      for (const c of claims) {
+        const native = c.text_mt || c.claim || c.text;
+        ol.appendChild(claimEl({
+          text: native,
+          text_en: c.text_mt ? (c.claim || c.text) : null,
+          citation: c.citation,
+        }));
+        speakLine.push(native);
+      }
+      typing.appendChild(ol);
+    }
+    if (speakLine.length) {
+      const sp = document.createElement("button");
+      sp.type = "button"; sp.className = "chat-speak";
+      sp.textContent = "🔊 " + S("listen");
+      sp.addEventListener("click", () => speakTexts(speakLine, speechLocale()));
+      typing.appendChild(sp);
+    }
+  } catch (e) {
+    typing.classList.remove("chat-typing");
+    typing.textContent = "Error: " + e.message;
+  }
+  chatScroll();
+}
+$("chatSend").addEventListener("click", chatSend);
+$("chatInput").addEventListener("keydown", (e) => { if (e.key === "Enter") chatSend(); });
+if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+  $("chatMic").hidden = false;
+  $("chatMic").addEventListener("click", () => speakInto($("chatInput")));
+}
 
 // ---------- boot ----------
 (function boot() {
