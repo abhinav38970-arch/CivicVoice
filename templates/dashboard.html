@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗣️</text></svg>">
+<title>CivicVoice — Your dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="dash-head">
+    <div class="dash-id">
+      <div class="avatar" id="avatar">?</div>
+      <div>
+        <div class="dash-greet"><span data-i18n="hello">Hello</span>, <b id="userName">{{ user.name }}</b></div>
+        <div class="dash-sub" data-i18n="dashSub">Your civic dashboard</div>
+      </div>
+    </div>
+    <div class="dash-actions">
+      <button type="button" class="icon-pill" id="langBtn" aria-label="Language">🌐</button>
+      <button type="button" class="icon-pill" id="logoutBtn" data-i18n-aria="logout" aria-label="Log out">⏻</button>
+    </div>
+  </header>
+  <div class="lang-sheet" id="langSheet" hidden>
+    <div class="lang-scroll small" id="langScroll">
+      {% for l in languages %}
+      <button type="button" class="lang-pill" data-lang="{{ l.code }}">
+        <span class="lang-pill-native">{{ l.native }}</span>
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <nav class="tabbar" role="tablist">
+    <button type="button" class="tab active" data-tab="news" role="tab">📰<span data-i18n="tabNews">News</span></button>
+    <button type="button" class="tab" data-tab="ballot" role="tab">🗳️<span data-i18n="tabBallot">Ballot</span></button>
+    <button type="button" class="tab" data-tab="tasks" role="tab">🔧<span data-i18n="tabTasks">City tasks</span></button>
+    <button type="button" class="tab" data-tab="ask" role="tab">💬<span data-i18n="tabAsk">Ask</span></button>
+  </nav>
+
+  <main>
+    <!-- 1. Council news -->
+    <section class="tabpane active" id="pane-news" role="tabpanel">
+      <div class="pane-head">
+        <h2 data-i18n="newsTitle">Council news</h2>
+        <p data-i18n="noticesSub"></p>
+      </div>
+      <div id="notices" class="notices"></div>
+    </section>
+
+    <!-- 2. Ballot information -->
+    <section class="tabpane" id="pane-ballot" role="tabpanel">
+      <div class="pane-head">
+        <h2 data-i18n="ballotTitle">Ballot information</h2>
+        <p data-i18n="exampleSub"></p>
+      </div>
+      <div id="cards" class="cards"></div>
+      <div id="ballotResult" class="result-card" hidden>
+        <div class="result-head">
+          <h3 id="resTitleText"></h3>
+          <div class="result-actions">
+            <button type="button" class="chip-btn" id="listenBtn" hidden>🔊 <span data-i18n="listen">Listen</span></button>
+            <span class="featured-badge" id="featuredBadge" hidden></span>
+          </div>
+        </div>
+        <div id="resultLoading" class="result-loading" hidden>
+          <div class="spinner"></div><p id="resultLoadingText"></p>
+        </div>
+        <p id="honestNote" class="honest-note" hidden></p>
+        <div id="resultSections"></div>
+      </div>
+    </section>
+
+    <!-- 3. City tasks -->
+    <section class="tabpane" id="pane-tasks" role="tabpanel">
+      <div class="pane-head">
+        <h2 data-i18n="reportTitle">Report a neighborhood issue</h2>
+        <p data-i18n="reportSub"></p>
+      </div>
+      <div class="issue-grid" id="issueGrid">
+        <button type="button" class="issue-btn" data-issue-en="Pothole">
+          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><ellipse cx="12" cy="14" rx="8" ry="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 10c2-3 5-4 8-4s6 1 8 4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span data-i18n="issuePothole">Pothole</span>
+        </button>
+        <button type="button" class="issue-btn" data-issue-en="Illegal dumping">
+          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-i18n="issueDumping">Illegal dumping</span>
+        </button>
+        <button type="button" class="issue-btn" data-issue-en="Broken streetlight">
+          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M9 3h6l-1 7h-4L9 3zM12 10v9M8 21h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-i18n="issueStreetlight">Broken streetlight</span>
+        </button>
+      </div>
+      <textarea id="reportText" class="report-text" rows="3" data-i18n-ph="describePlaceholder" placeholder=""></textarea>
+      <div class="row">
+        <button type="button" class="chip-btn" id="micReport" hidden>🎙️</button>
+        <button type="button" class="chip-btn" id="gpsBtn" data-i18n="useLocation">Use my location</button>
+        <span id="gpsStatus" class="muted"></span>
+      </div>
+      <button type="button" class="primary-btn" id="genReport" data-i18n="generateReport">Generate report</button>
+      <div id="reportOut" class="report-out" hidden>
+        <pre id="reportPre" class="report-pre"></pre>
+        <div class="row">
+          <button type="button" class="chip-btn" id="copyReport" data-i18n="copyReport">Copy report</button>
+          <button type="button" class="chip-btn" id="saveReport" data-i18n="saveReport">Save to my dashboard</button>
+          <a class="chip-btn chip-link" href="https://www.fremont.gov/" target="_blank" rel="noopener" data-i18n="openCity">Open fremont.gov</a>
+          <span id="copyStatus" class="muted"></span>
+        </div>
+        <p class="muted" data-i18n="cityNote"></p>
+      </div>
+      <div class="pane-head" style="margin-top:24px">
+        <h2 data-i18n="myReports">My reports</h2>
+      </div>
+      <div id="myReports" class="notices">
+        {% for r in reports %}
+        <div class="notice-item">
+          <span class="notice-title">{{ r.issue }}</span>
+          <span class="notice-date">{{ r.location or "" }}</span>
+        </div>
+        {% else %}
+        <p class="muted" data-i18n="noReports">No reports yet.</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- 4. Ask about city laws -->
+    <section class="tabpane" id="pane-ask" role="tabpanel">
+      <div class="pane-head">
+        <h2 data-i18n="askTitle">Ask about city laws</h2>
+        <p data-i18n="askSub"></p>
+      </div>
+      <div class="ask-row">
+        <input id="query" type="text" data-i18n-ph="askPlaceholder" placeholder="" autocomplete="off">
+        <button id="micBtn" type="button" class="icon-btn" hidden aria-label="Speak">🎙️</button>
+        <button id="askBtn" type="button"><span class="btn-label" data-i18n="askButton">Ask</span></button>
+      </div>
+      <p id="askHint" class="muted"></p>
+      <p id="status" class="status"></p>
+      <div id="askResult" class="result-card" hidden>
+        <div class="result-head">
+          <h3 id="askTitleText"></h3>
+          <button type="button" class="chip-btn" id="listenAsk" hidden>🔊 <span data-i18n="listen">Listen</span></button>
+        </div>
+        <p id="askHonest" class="honest-note" hidden></p>
+        <div id="askSections"></div>
+        <div id="askSources"></div>
+      </div>
+
+      <div class="pane-head" style="margin-top:24px">
+        <h2 data-i18n="uploadTitle">Upload a document</h2>
+        <p data-i18n="uploadSub"></p>
+      </div>
+      <div class="upload-box">
+        <input type="file" id="docFile" accept=".pdf,.txt" hidden>
+        <button type="button" class="primary-btn" id="uploadBtn" data-i18n="uploadBtn">Choose PDF or text file</button>
+        <span id="uploadName" class="muted"></span>
+      </div>
+      <div id="uploadOut" class="result-card" hidden>
+        <h3 id="uploadTitle"></h3>
+        <p id="uploadNote" class="honest-note" hidden></p>
+        <p id="uploadText" class="doc-text"></p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Citation drawer -->
+<div id="drawerScrim" class="scrim" hidden></div>
+<aside id="drawer" class="drawer" hidden>
+  <div class="drawer-head">
+    <h2 data-i18n="drawerTitle">Verify this claim</h2>
+    <button id="drawerClose" type="button" aria-label="Close">✕</button>
+  </div>
+  <p class="drawer-why" data-i18n="drawerWhy"></p>
+  <dl class="drawer-meta">
+    <div><dt data-i18n="drawerFile">File</dt><dd id="dFile" class="mono">—</dd></div>
+    <div><dt data-i18n="drawerPage">Page</dt><dd id="dPage">—</dd></div>
+    <div><dt data-i18n="drawerSection">Section</dt><dd id="dSection">—</dd></div>
+  </dl>
+  <p class="drawer-text-label" data-i18n="drawerSourceText">Source text</p>
+  <p id="dText" class="drawer-text"></p>
+</aside>
+
+<script>
+window.I18N = {{ ui_strings|tojson }};
+window.SPEECH_LOCALES = {{ speech_locales|tojson }};
+window.TRANSLATE_ON = {{ "true" if translate_available else "false" }};
+window.TTS_SERVER = {{ "true" if tts_available else "false" }};
+window.USER_LANG = "{{ user.language }}";
+
+const $ = (id) => document.getElementById(id);
+const LANG_KEY = "civicvoice_lang";
+const EN = window.I18N.en;
+function S(key) {
+  const l = currentLang();
+  return (window.I18N[l] && window.I18N[l][key]) || EN[key] || key;
+}
+function currentLang() {
+  return localStorage.getItem(LANG_KEY) || window.USER_LANG || "en";
+}
+function speechLocale() {
+  return (window.SPEECH_LOCALES || {})[currentLang()] || "en-US";
+}
+// Bilingual line: native text + English in smaller parens (skipped when identical)
+function bi(native, english) {
+  if (!english || native.trim() === english.trim()) return document.createTextNode(native);
+  const frag = document.createDocumentFragment();
+  frag.appendChild(document.createTextNode(native + " "));
+  const sp = document.createElement("span");
+  sp.className = "en-sub";
+  sp.textContent = "(" + english + ")";
+  frag.appendChild(sp);
+  return frag;
+}
+
+// ---------- language ----------
+function applyLanguage(lang) {
+  const strings = window.I18N[lang] || EN;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === "fa" || lang === "ar") ? "rtl" : "ltr";
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const nat = strings[el.dataset.i18n], eng = EN[el.dataset.i18n];
+    el.innerHTML = "";
+    el.appendChild(bi(typeof nat === "string" ? nat : el.textContent, typeof eng === "string" ? eng : null));
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
+    const v = strings[el.dataset.i18nPh];
+    if (typeof v === "string") el.placeholder = v;
+  });
+  document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+    const v = strings[el.dataset.i18nAria];
+    if (typeof v === "string") el.setAttribute("aria-label", v);
+  });
+  document.querySelectorAll("#langScroll .lang-pill").forEach((b) => {
+    b.classList.toggle("active", b.dataset.lang === lang);
+  });
+  stopSpeaking();
+  loadCards();
+}
+$("langBtn").addEventListener("click", () => { $("langSheet").hidden = !$("langSheet").hidden; });
+document.querySelectorAll("#langScroll .lang-pill").forEach((b) => {
+  b.addEventListener("click", () => {
+    localStorage.setItem(LANG_KEY, b.dataset.lang);
+    $("langSheet").hidden = true;
+    applyLanguage(b.dataset.lang);
+  });
+});
+
+// ---------- tabs ----------
+document.querySelectorAll(".tab").forEach((t) => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
+    document.querySelectorAll(".tabpane").forEach((x) => x.classList.remove("active"));
+    t.classList.add("active");
+    $("pane-" + t.dataset.tab).classList.add("active");
+    stopSpeaking();
+  });
+});
+
+// ---------- logout ----------
+$("logoutBtn").addEventListener("click", async () => {
+  await fetch("/api/logout", {method: "POST"});
+  location.href = "/";
+});
+
+// ---------- citation drawer (unchanged logic) ----------
+function pageForFetch(p) { return Array.isArray(p) ? p[0] : p; }
+function pageLabel(p) { return Array.isArray(p) ? (p.length > 1 ? p[0] + "–" + p[1] : String(p[0])) : String(p); }
+async function openChunk(file, page) {
+  $("drawer").hidden = false; $("drawerScrim").hidden = false;
+  $("dFile").textContent = file; $("dPage").textContent = pageLabel(page);
+  $("dSection").textContent = "…"; $("dText").textContent = "…";
+  try {
+    const res = await fetch("/api/chunk?file=" + encodeURIComponent(file) + "&page=" + encodeURIComponent(pageForFetch(page)));
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "could not load source");
+    $("dSection").textContent = data.section_title || "—";
+    $("dText").textContent = data.text;
+    $("dPage").textContent = pageLabel(data.page);
+  } catch (e) { $("dSection").textContent = "—"; $("dText").textContent = "Error: " + e.message; }
+  document.body.classList.add("drawer-open");
+}
+function closeDrawer() { $("drawer").hidden = true; $("drawerScrim").hidden = true; document.body.classList.remove("drawer-open"); }
+$("drawerClose").addEventListener("click", closeDrawer);
+$("drawerScrim").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+function citationEl(c) {
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "citation";
+  b.textContent = c.source_file + " · page " + pageLabel(c.page);
+  b.addEventListener("click", () => openChunk(c.source_file, c.page));
+  return b;
+}
+
+// ---------- TTS: server key first, browser voice fallback ----------
+let audioEl = null;
+function stopSpeaking() {
+  if (audioEl) { audioEl.pause(); audioEl = null; }
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+}
+async function speakTexts(texts, langTag) {
+  stopSpeaking();
+  const full = texts.join(" ");
+  if (window.TTS_SERVER) {
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({text: full, lang: langTag}),
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        audioEl = new Audio(URL.createObjectURL(blob));
+        audioEl.play();
+        return;
+      }
+    } catch (e) { /* fall through to browser voice */ }
+  }
+  if ("speechSynthesis" in window) {
+    const u = new SpeechSynthesisUtterance(full);
+    u.lang = langTag;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ---------- live translation helper ----------
+async function tr(text, target, source) {
+  if (!window.TRANSLATE_ON || !text) return null;
+  try {
+    const res = await fetch("/api/translate", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({text, target, source}),
+    });
+    const data = await res.json();
+    return res.ok && data.ok ? data.text : null;
+  } catch (e) { return null; }
+}
+
+// ---------- featured cards (bilingual) ----------
+async function loadCards() {
+  const wrap = $("cards");
+  try {
+    const res = await fetch("/api/golden");
+    const cards = await res.json();
+    wrap.innerHTML = "";
+    for (const c of cards) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "topic-card";
+      const t = document.createElement("span"); t.className = "topic-card-title"; t.textContent = c.title;
+      b.appendChild(t);
+      if (c.topic) {
+        const d = document.createElement("span"); d.className = "topic-card-desc"; d.textContent = c.topic;
+        b.appendChild(d);
+      }
+      const chip = document.createElement("span"); chip.className = "topic-card-chip"; chip.textContent = S("verifiedChip");
+      b.appendChild(chip);
+      b.addEventListener("click", () => loadFeatured(c.id));
+      wrap.appendChild(b);
+    }
+  } catch (e) { wrap.innerHTML = ""; }
+}
+function claimEl(item) {
+  const li = document.createElement("li");
+  const p = document.createElement("p");
+  p.className = "claim";
+  p.appendChild(bi(item.text, item.text_en));
+  li.appendChild(p);
+  if (item.missingTranslation) {
+    const f = document.createElement("span"); f.className = "trans-note";
+    f.textContent = "(translation not yet available — showing English)";
+    li.appendChild(f);
+  }
+  if (item.citation) li.appendChild(citationEl(item.citation));
+  return li;
+}
+async function loadFeatured(id) {
+  const lang = currentLang();
+  const box = $("ballotResult");
+  box.hidden = false;
+  $("resultLoading").hidden = false;
+  $("resultLoadingText").textContent = S("loadingExample");
+  $("resultSections").innerHTML = "";
+  $("honestNote").hidden = true;
+  box.scrollIntoView({behavior: "smooth", block: "start"});
+  try {
+    let url = "/api/golden/" + encodeURIComponent(id) + "?language=" + encodeURIComponent(lang) + "&bilingual=1";
+    let data = await (await fetch(url)).json();
+    // Extended language without MT: translate claims live when keys exist
+    if (window.TRANSLATE_ON && !data.claims[0].language_available) {
+      for (const c of data.claims) {
+        const t = await tr(c.text_en || c.text, lang, "en");
+        if (t) { c.text = t; c.language_available = true; c.missingTranslation = false; }
+      }
+    }
+    $("resultLoading").hidden = true;
+    $("resTitleText").textContent = data.title;
+    const badge = $("featuredBadge");
+    badge.hidden = false; badge.textContent = S("featuredBadge");
+    const groups = [
+      {kind: "summary", label: S("summaryLabel"), items: []},
+      {kind: "impact_pass", label: S("impactPass"), items: []},
+      {kind: "impact_fail", label: S("impactFail"), items: []},
+    ];
+    for (const c of data.claims) {
+      (groups.find((g) => g.kind === (c.kind || "summary")) || groups[0]).items.push({
+        text: c.text, text_en: c.text_en, citation: c.citation,
+        missingTranslation: !c.language_available && lang !== "en",
+      });
+    }
+    const secs = $("resultSections");
+    for (const g of groups) {
+      if (!g.items.length) continue;
+      const h = document.createElement("h3"); h.className = "group-h"; h.textContent = g.label;
+      secs.appendChild(h);
+      const ol = document.createElement("ol"); ol.className = "claims";
+      for (const it of g.items) ol.appendChild(claimEl(it));
+      secs.appendChild(ol);
+    }
+    $("listenBtn").hidden = false;
+    $("listenBtn").onclick = () => {
+      const texts = [...secs.querySelectorAll(".claim")].map((e) => e.firstChild.textContent);
+      speakTexts(texts, speechLocale());
+    };
+  } catch (e) {
+    $("resultLoading").hidden = true;
+    $("honestNote").textContent = "Error: " + e.message;
+    $("honestNote").hidden = false;
+  }
+}
+
+// ---------- notices ----------
+async function loadNotices() {
+  const wrap = $("notices");
+  try {
+    const items = await (await fetch("/api/notices")).json();
+    wrap.innerHTML = "";
+    for (const n of items) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "notice-item";
+      const t = document.createElement("span"); t.className = "notice-title"; t.textContent = n.title;
+      b.appendChild(t);
+      if (n.date) {
+        const d = document.createElement("span"); d.className = "notice-date"; d.textContent = n.date;
+        b.appendChild(d);
+      }
+      b.addEventListener("click", () => openChunk(n.source_file, n.page));
+      wrap.appendChild(b);
+    }
+  } catch (e) {
+    wrap.innerHTML = "";
+    const p = document.createElement("p"); p.className = "muted"; p.textContent = S("noticesFailed");
+    wrap.appendChild(p);
+  }
+}
+
+// ---------- 311 ----------
+let reportIssue = null, reportCoords = null;
+document.querySelectorAll(".issue-btn").forEach((b) => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll(".issue-btn").forEach((x) => x.classList.remove("active"));
+    b.classList.add("active");
+    reportIssue = b.dataset.issueEn;
+  });
+});
+$("gpsBtn").addEventListener("click", () => {
+  if (!("geolocation" in navigator)) return;
+  $("gpsStatus").textContent = "…";
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      reportCoords = pos.coords.latitude.toFixed(5) + ", " + pos.coords.longitude.toFixed(5);
+      $("gpsStatus").textContent = S("locationReady");
+    },
+    () => { reportCoords = null; $("gpsStatus").textContent = S("gpsDenied"); },
+    {timeout: 10000});
+});
+$("genReport").addEventListener("click", () => {
+  const desc = $("reportText").value.trim();
+  $("reportPre").textContent = [
+    "CivicVoice neighborhood report",
+    "Issue: " + (reportIssue || "not selected"),
+    "Description: " + (desc || "—"),
+    "Location: " + (reportCoords ? reportCoords + " (GPS)" : "not captured"),
+    "Date: " + new Date().toISOString().slice(0, 10),
+  ].join("\n");
+  $("reportOut").hidden = false;
+  $("copyStatus").textContent = "";
+});
+$("copyReport").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText($("reportPre").textContent);
+    $("copyStatus").textContent = S("copied");
+  } catch (e) { /* clipboard unavailable */ }
+});
+$("saveReport").addEventListener("click", async () => {
+  const res = await fetch("/api/save-report", {
+    method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({issue: reportIssue || "not selected",
+      description: $("reportText").value.trim(), location: reportCoords || ""}),
+  });
+  const data = await res.json().catch(() => ({}));
+  $("copyStatus").textContent = (res.ok && data.ok) ? S("saved") : "";
+});
+
+// ---------- voice input (STT) ----------
+function speakInto(el) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return null;
+  const rec = new SR();
+  rec.lang = speechLocale();
+  rec.interimResults = false;
+  rec.onresult = (e) => { el.value = e.results[0][0].transcript; };
+  try { rec.start(); } catch (e) { return null; }
+  return rec;
+}
+(function initMic() {
+  if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+    $("micBtn").hidden = false;
+    $("micReport").hidden = false;
+    $("micBtn").addEventListener("click", () => speakInto($("query")));
+    $("micReport").addEventListener("click", () => speakInto($("reportText")));
+  }
+})();
+
+// ---------- ask (with translation pipeline when keys exist) ----------
+async function ask() {
+  let query = $("query").value.trim();
+  const lang = currentLang();
+  if (!query) { $("status").textContent = S("typeQuestion"); return; }
+  $("askBtn").disabled = true;
+  $("status").textContent = "";
+  const box = $("askResult");
+  box.hidden = false;
+  $("askSections").innerHTML = ""; $("askSources").innerHTML = "";
+  $("askHonest").hidden = true;
+  $("askTitleText").textContent = S("questionTitle");
+  $("askHint").textContent = "";
+  box.scrollIntoView({behavior: "smooth", block: "start"});
+
+  // translate non-English queries to English for retrieval when keys exist
+  let qEn = query, translated = false;
+  if (lang !== "en" && window.TRANSLATE_ON) {
+    const t = await tr(query, "en", lang);
+    if (t) { qEn = t; translated = true; }
+  }
+  if (lang !== "en" && !window.TRANSLATE_ON) {
+    $("askHint").textContent = "Translation is not connected yet — searching in English.";
+  }
+
+  try {
+    const res = await fetch("/api/ask", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({query: qEn, language: "en", k: 5}),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "request failed");
+    const secs = $("askSections"), srcs = $("askSources");
+    if (data.mode === "mock_sources") {
+      $("askHonest").textContent = data.message;
+      $("askHonest").hidden = false;
+      for (const s of data.sources) {
+        const div = document.createElement("div"); div.className = "source-item";
+        const t = document.createElement("p"); t.className = "source-text";
+        t.textContent = s.text.length > 400 ? s.text.slice(0, 400) + "…" : s.text;
+        div.appendChild(t); div.appendChild(citationEl(s));
+        srcs.appendChild(div);
+      }
+    } else {
+      // translate answer claims back when keys exist
+      const claims = data.summary || [];
+      if (lang !== "en" && window.TRANSLATE_ON) {
+        for (const c of claims) {
+          const t = await tr(c.claim || c.text, lang, "en");
+          if (t) c.text_mt = t;
+        }
+      }
+      const ol = document.createElement("ol"); ol.className = "claims";
+      for (const c of claims) {
+        ol.appendChild(claimEl({text: c.text_mt || c.claim || c.text,
+          text_en: (c.text_mt && (c.claim || c.text)) || null, citation: c.citation}));
+      }
+      secs.appendChild(ol);
+    }
+    const btn = $("listenAsk");
+    btn.hidden = false;
+    btn.onclick = () => {
+      const texts = [...secs.querySelectorAll(".claim")].map((e) => e.firstChild.textContent);
+      speakTexts(texts, speechLocale());
+    };
+  } catch (e) {
+    $("askHonest").textContent = "Error: " + e.message;
+    $("askHonest").hidden = false;
+  } finally {
+    $("askBtn").disabled = false;
+  }
+}
+$("askBtn").addEventListener("click", ask);
+$("query").addEventListener("keydown", (e) => { if (e.key === "Enter") ask(); });
+
+// ---------- document upload ----------
+$("uploadBtn").addEventListener("click", () => $("docFile").click());
+$("docFile").addEventListener("change", async () => {
+  const f = $("docFile").files[0];
+  if (!f) return;
+  $("uploadName").textContent = f.name;
+  const box = $("uploadOut");
+  box.hidden = false;
+  $("uploadTitle").textContent = f.name;
+  $("uploadText").textContent = "…";
+  $("uploadNote").hidden = true;
+  const fd = new FormData();
+  fd.append("file", f);
+  try {
+    const res = await fetch("/api/upload", {method: "POST", body: fd});
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || "upload failed");
+    $("uploadText").textContent = data.text;
+    if (data.note === "extracted_text_only") {
+      $("uploadNote").textContent = "Text extracted. Summaries need an AI key — showing the document text for now.";
+      $("uploadNote").hidden = false;
+    }
+  } catch (e) {
+    $("uploadText").textContent = "Error: " + e.message;
+  }
+});
+
+// ---------- boot ----------
+(function boot() {
+  $("avatar").textContent = ("{{ user.name }}".trim()[0] || "?").toUpperCase();
+  applyLanguage(currentLang());
+  loadNotices();
+})();
+</script>
+</body>
+</html>

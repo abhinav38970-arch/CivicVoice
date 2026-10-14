@@ -14,3 +14,6 @@ data/index/
 
 # Vendored embedding model (90MB) — auto-downloaded on first run
 models/
+
+# User accounts database (private user data, never committed)
+data/users.db

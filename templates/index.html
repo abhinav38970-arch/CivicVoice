@@ -3,687 +3,179 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CivicVoice — Plain-language summaries of civic documents</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗣️</text></svg>">
+<title>CivicVoice — Your city, in your language</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+<div class="app-shell">
 
-<!-- Feature 1: language gatekeeper — zero English by default -->
-<div id="gatekeeper" class="gatekeeper" hidden>
-  <div class="gatekeeper-inner">
-    <div class="brand gate-brand">CivicVoice</div>
-    <div class="gatekeeper-grid" role="group">
+  <!-- Warm welcome -->
+  <header class="welcome-hero">
+    <div class="welcome-badge">CA-14 · Fremont</div>
+    <h1 class="welcome-title">CivicVoice</h1>
+    <p class="welcome-sub" id="welcomeSub">Your city council, your ballot, your neighborhood — explained in the language you speak at home.</p>
+  </header>
+
+  <!-- Language scroll picker -->
+  <section class="picker-card">
+    <h2 class="picker-h" id="pickerH">Choose your language</h2>
+    <div class="lang-scroll" id="langScroll" role="listbox" aria-label="Language">
       {% for l in languages %}
-      <button type="button" class="gate-btn" data-lang="{{ l.code }}">
-        <span class="gate-native">{{ l.native }}</span>
+      <button type="button" role="option" class="lang-pill" data-lang="{{ l.code }}"
+              aria-selected="false">
+        <span class="lang-pill-native">{{ l.native }}</span>
+        <span class="lang-pill-name">{{ l.name }}</span>
+        {% if not l.verified %}<span class="lang-pill-tag">basic</span>{% endif %}
       </button>
       {% endfor %}
     </div>
-  </div>
-</div>
-
-<div class="page">
-
-  <header class="topbar">
-    <div class="brand">CivicVoice</div>
-    <div class="topbar-right">
-      <span class="district-pill">CA-14</span>
-      <button id="changeLang" type="button" class="link-btn" data-i18n="changeLanguage">Change language</button>
-    </div>
-  </header>
-
-  <section class="hero">
-    <h1 data-i18n="tagline">Your city council and ballot, explained in your language.</h1>
-    <p class="hero-sub" data-i18n="heroSub"></p>
+    <p class="picker-note" id="pickerNote" hidden></p>
   </section>
 
-  <main>
-    <!-- Language picker -->
-    <section class="card" aria-labelledby="langHeading">
-      <h2 id="langHeading" class="section-h" data-i18n="chooseLanguage">Choose your language</h2>
-      <p class="section-sub" data-i18n="languageSub"></p>
-      <div id="langGrid" class="lang-grid" role="group" aria-label="Language">
-        {% for l in languages %}
-        <button type="button" class="lang-btn" data-lang="{{ l.code }}"
-                aria-pressed="false">
-          <span class="lang-native">{{ l.native }}</span>
-          <span class="lang-name">{{ l.name }}</span>
-        </button>
-        {% endfor %}
-      </div>
-    </section>
+  <!-- Auth portal -->
+  <section class="auth-card" id="login">
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" data-tab="login" id="tabLogin">Log in</button>
+      <button type="button" class="auth-tab" data-tab="register" id="tabRegister">Create account</button>
+    </div>
 
-    <!-- Featured cards -->
-    <section class="card" aria-labelledby="cardsHeading">
-      <h2 id="cardsHeading" class="section-h" data-i18n="tryExample">Try a real example</h2>
-      <p class="section-sub" data-i18n="exampleSub"></p>
-      <div id="cards" class="cards" aria-live="polite">
-        <div class="card-skel"></div><div class="card-skel"></div>
-        <div class="card-skel"></div><div class="card-skel"></div>
-      </div>
-    </section>
+    <form id="loginForm" class="auth-form">
+      <label class="field"><span id="loginEmailL">Email</span>
+        <input type="email" id="loginEmail" required autocomplete="email"></label>
+      <label class="field"><span id="loginPassL">Password</span>
+        <input type="password" id="loginPass" required autocomplete="current-password"></label>
+      <p class="form-err" id="loginErr" hidden></p>
+      <button type="submit" class="primary-btn big" id="loginBtn">Log in</button>
+    </form>
 
-    <!-- Local notices -->
-    <section class="card" aria-labelledby="noticesHeading">
-      <h2 id="noticesHeading" class="section-h" data-i18n="noticesTitle">Local notices</h2>
-      <p class="section-sub" data-i18n="noticesSub"></p>
-      <div id="notices" class="notices" aria-live="polite"></div>
-    </section>
+    <form id="registerForm" class="auth-form" hidden>
+      <label class="field"><span id="regNameL">Your name</span>
+        <input type="text" id="regName" required autocomplete="name"></label>
+      <label class="field"><span id="regEmailL">Email</span>
+        <input type="email" id="regEmail" required autocomplete="email"></label>
+      <label class="field"><span id="regPassL">Password (6+ characters)</span>
+        <input type="password" id="regPass" required minlength="6" autocomplete="new-password"></label>
+      <p class="form-err" id="regErr" hidden></p>
+      <button type="submit" class="primary-btn big" id="regBtn">Create account</button>
+    </form>
+    <p class="auth-note" id="authNote">Your account keeps your dashboard, language, and reports in one place.</p>
+  </section>
 
-    <!-- 311: tap-to-report (honest version — builds a report, never auto-files) -->
-    <section class="card" aria-labelledby="reportHeading">
-      <h2 id="reportHeading" class="section-h" data-i18n="reportTitle">Report a neighborhood issue</h2>
-      <p class="section-sub" data-i18n="reportSub"></p>
-      <div class="issue-grid" id="issueGrid" role="group" aria-label="Issue type">
-        <button type="button" class="issue-btn" data-issue="pothole" data-issue-en="Pothole">
-          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><ellipse cx="12" cy="14" rx="8" ry="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 10c2-3 5-4 8-4s6 1 8 4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-          <span data-i18n="issuePothole">Pothole</span>
-        </button>
-        <button type="button" class="issue-btn" data-issue="dumping" data-issue-en="Illegal dumping">
-          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span data-i18n="issueDumping">Illegal dumping</span>
-        </button>
-        <button type="button" class="issue-btn" data-issue="streetlight" data-issue-en="Broken streetlight">
-          <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M9 3h6l-1 7h-4L9 3zM12 10v9M8 21h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 1v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <span data-i18n="issueStreetlight">Broken streetlight</span>
-        </button>
-      </div>
-      <label class="field-label" for="reportText" data-i18n="describePlaceholder">Describe the issue</label>
-      <textarea id="reportText" class="report-text" rows="3" data-i18n-ph="describePlaceholder" data-i18n-aria="describePlaceholder" placeholder=""></textarea>
-      <div class="row">
-        <button id="gpsBtn" type="button" class="chip-btn" data-i18n="useLocation">Use my location</button>
-        <span id="gpsStatus" class="muted"></span>
-      </div>
-      <button id="genReport" type="button" class="primary-btn" data-i18n="generateReport">Generate report</button>
-      <div id="reportOut" class="report-out" hidden>
-        <pre id="reportPre" class="report-pre"></pre>
-        <div class="row">
-          <button id="copyReport" type="button" class="chip-btn" data-i18n="copyReport">Copy report</button>
-          <a id="openCity" class="chip-btn chip-link" href="https://www.fremont.gov/" target="_blank" rel="noopener" data-i18n="openCity">Open fremont.gov</a>
-          <span id="copyStatus" class="muted"></span>
-        </div>
-        <p class="muted" data-i18n="cityNote"></p>
-      </div>
-    </section>
-
-    <!-- Free-text ask -->
-    <section class="card" aria-labelledby="askHeading">
-      <h2 id="askHeading" class="section-h" data-i18n="askTitle">Ask your own question</h2>
-      <p class="section-sub" data-i18n="askSub"></p>
-      <div class="ask-row">
-        <input id="query" type="text" data-i18n-ph="askPlaceholder" data-i18n-aria="askTitle"
-               placeholder="" autocomplete="off" aria-label="">
-        <button id="micBtn" type="button" class="icon-btn" data-i18n-aria="voiceInput" aria-label="" hidden>
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-        <button id="askBtn" type="button"><span class="btn-label" data-i18n="askButton">Ask</span></button>
-      </div>
-      <p id="status" class="status" aria-live="polite"></p>
-    </section>
-
-    <!-- Results -->
-    <section id="results" class="results" hidden aria-live="polite">
-      <div class="card">
-        <div class="result-head">
-          <h2 id="resTitle"><span id="resTitleText">Answer</span> <span id="resLang" class="lang-tag"></span></h2>
-          <div class="result-actions">
-            <button id="listenBtn" type="button" class="chip-btn" hidden>
-              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              <span data-i18n="listen">Listen</span>
-            </button>
-            <span id="featuredBadge" class="featured-badge" hidden></span>
-          </div>
-        </div>
-        <div id="resultLoading" class="result-loading" hidden>
-          <div class="spinner" role="status" aria-label="Loading"></div>
-          <p id="resultLoadingText"></p>
-        </div>
-        <p id="honestNote" class="honest-note" hidden></p>
-        <div id="resultSections"></div>
-        <div id="sourcesBlock"></div>
-      </div>
-    </section>
-
-    <!-- Verification panel -->
-    <section class="card trust-card" aria-labelledby="trustHeading">
-      <h2 id="trustHeading" class="section-h" data-i18n="trustTitle">How we check our work</h2>
-      <ul class="trust-list">
-        <li data-i18n="trust1"></li>
-        <li data-i18n="trust2"></li>
-        <li data-i18n="trust3"></li>
-      </ul>
-      <p class="muted" id="evalSummaryLine"></p>
-      <details class="tech-details">
-        <summary data-i18n="techSummary">For the technically curious</summary>
-        <p class="muted" data-i18n="techText"></p>
-        <div id="techMetrics" class="metrics" hidden>
-          <div><dt>Citation validity</dt><dd id="mValidity">—</dd></div>
-          <div><dt>Grounding score</dt><dd id="mGrounding">—</dd></div>
-          <div><dt>Advisory flags</dt><dd id="mFlags">—</dd></div>
-          <div><dt>Verdict</dt><dd id="mVerdict">—</dd></div>
-        </div>
-      </details>
-    </section>
-  </main>
-
-  <footer>
-    <p data-i18n="footerSources"></p>
-    {% if mock_mode %}
-    <p class="foot-note" data-i18n="demoNote"></p>
-    {% endif %}
+  <footer class="landing-foot">
+    <p>CivicVoice describes public civic documents. It never tells you how to vote.</p>
   </footer>
 </div>
 
-<!-- Citation side panel: the exact source chunk behind a claim -->
-<div id="drawerScrim" class="scrim" hidden></div>
-<aside id="drawer" class="drawer" hidden aria-label="Source document">
-  <div class="drawer-head">
-    <h2 data-i18n="drawerTitle">Verify this claim</h2>
-    <button id="drawerClose" type="button" data-i18n-aria="closeBtn" aria-label="Close">✕</button>
-  </div>
-  <p class="drawer-why" data-i18n="drawerWhy"></p>
-  <dl class="drawer-meta">
-    <div><dt data-i18n="drawerFile">File</dt><dd id="dFile" class="mono">—</dd></div>
-    <div><dt data-i18n="drawerPage">Page</dt><dd id="dPage">—</dd></div>
-    <div><dt data-i18n="drawerSection">Section</dt><dd id="dSection">—</dd></div>
-  </dl>
-  <p class="drawer-text-label" data-i18n="drawerSourceText">Source text</p>
-  <p id="dText" class="drawer-text"></p>
-</aside>
-
 <script>
 window.I18N = {{ ui_strings|tojson }};
-window.SPEECH_LOCALES = {{ speech_locales|tojson }};
-
 const $ = (id) => document.getElementById(id);
 const LANG_KEY = "civicvoice_lang";
-const STR = (key) => {
-  const lang = currentLang();
+let pendingLang = localStorage.getItem(LANG_KEY) || "en";
+
+function S(lang, key) {
   return (window.I18N[lang] && window.I18N[lang][key]) || window.I18N.en[key] || key;
-};
-
-function currentLang() {
-  return localStorage.getItem(LANG_KEY) || "en";
 }
 
-// ---------- full UI language flip ----------
-let lastEval = null;
-function applyLanguage(lang) {
-  const S = window.I18N[lang] || window.I18N.en;
-  document.documentElement.lang = lang;
-  document.documentElement.dir = (lang === "fa") ? "rtl" : "ltr";
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
-    const v = S[el.dataset.i18n];
-    if (typeof v === "string") el.textContent = v;
-  });
-  document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
-    const v = S[el.dataset.i18nPh];
-    if (typeof v === "string") el.placeholder = v;
-  });
-  document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
-    const v = S[el.dataset.i18nAria];
-    if (typeof v === "string") el.setAttribute("aria-label", v);
-  });
-  document.querySelectorAll(".lang-btn").forEach((b) => {
-    const on = b.dataset.lang === lang;
+// ---- language scroll picker ----
+function paintPicker() {
+  document.querySelectorAll(".lang-pill").forEach((b) => {
+    const on = b.dataset.lang === pendingLang;
     b.classList.toggle("active", on);
-    b.setAttribute("aria-pressed", on ? "true" : "false");
+    b.setAttribute("aria-selected", on ? "true" : "false");
   });
-  renderEvalLine();
-  loadCards();
-  stopSpeaking();
-}
-
-// ---------- gatekeeper ----------
-function openGatekeeper() { $("gatekeeper").hidden = false; }
-function closeGatekeeper() { $("gatekeeper").hidden = true; }
-document.querySelectorAll(".gate-btn").forEach((b) => {
-  b.addEventListener("click", () => {
-    localStorage.setItem(LANG_KEY, b.dataset.lang);
-    applyLanguage(b.dataset.lang);
-    closeGatekeeper();
-  });
-});
-$("changeLang").addEventListener("click", openGatekeeper);
-document.querySelectorAll(".lang-btn").forEach((b) => {
-  b.addEventListener("click", () => {
-    localStorage.setItem(LANG_KEY, b.dataset.lang);
-    applyLanguage(b.dataset.lang);
-  });
-});
-
-// ---------- text-to-speech (Web Speech API — no key, no network) ----------
-function stopSpeaking() {
-  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-}
-function speakResult() {
-  if (!("speechSynthesis" in window)) return;
-  const texts = [...document.querySelectorAll("#resultSections .claim")]
-    .map((e) => e.textContent.trim()).filter(Boolean);
-  if (!texts.length) return;
-  stopSpeaking();
-  const u = new SpeechSynthesisUtterance(texts.join(" "));
-  u.lang = (window.SPEECH_LOCALES || {})[currentLang()] || "en-US";
-  window.speechSynthesis.speak(u);
-}
-$("listenBtn").addEventListener("click", speakResult);
-
-// ---------- speech-to-text on the ask box (Chrome/Edge; hidden otherwise) ----------
-(function initSTT() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) return;
-  $("micBtn").hidden = false;
-  let rec = null;
-  $("micBtn").addEventListener("click", () => {
-    if (rec) { rec.stop(); return; }
-    rec = new SR();
-    rec.lang = (window.SPEECH_LOCALES || {})[currentLang()] || "en-US";
-    rec.interimResults = false;
-    rec.onresult = (e) => {
-      const t = e.results[0][0].transcript;
-      $("query").value = t;
-      rec = null;
-    };
-    rec.onend = () => { rec = null; };
-    rec.onerror = () => { rec = null; };
-    try { rec.start(); } catch (e) { rec = null; }
-  });
-})();
-
-// ---------- citation side panel ----------
-function pageForFetch(page) {
-  if (Array.isArray(page)) return page[0];
-  return page;
-}
-function pageLabel(page) {
-  if (Array.isArray(page)) return page.length > 1 ? page[0] + "–" + page[1] : String(page[0]);
-  return String(page);
-}
-async function openChunk(file, page) {
-  $("drawer").hidden = false;
-  $("drawerScrim").hidden = false;
-  $("dFile").textContent = file;
-  $("dPage").textContent = pageLabel(page);
-  $("dSection").textContent = "…";
-  $("dText").textContent = "…";
-  try {
-    const res = await fetch("/api/chunk?file=" + encodeURIComponent(file) +
-                            "&page=" + encodeURIComponent(pageForFetch(page)));
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "could not load source");
-    $("dSection").textContent = data.section_title || "—";
-    $("dText").textContent = data.text;
-    $("dPage").textContent = pageLabel(data.page);
-  } catch (e) {
-    $("dSection").textContent = "—";
-    $("dText").textContent = "Error: " + e.message;
-  }
-  document.body.classList.add("drawer-open");
-}
-function closeDrawer() {
-  $("drawer").hidden = true;
-  $("drawerScrim").hidden = true;
-  document.body.classList.remove("drawer-open");
-}
-$("drawerClose").addEventListener("click", closeDrawer);
-$("drawerScrim").addEventListener("click", closeDrawer);
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
-
-function citationEl(citation) {
-  const cite = document.createElement("button");
-  cite.type = "button";
-  cite.className = "citation";
-  cite.textContent = citation.source_file + " · page " + pageLabel(citation.page);
-  cite.addEventListener("click", () => openChunk(citation.source_file, citation.page));
-  return cite;
-}
-
-function claimEl(item) {
-  const li = document.createElement("li");
-  const p = document.createElement("p");
-  p.className = "claim";
-  p.textContent = item.claim || item.text;
-  li.appendChild(p);
-  if (item.missingTranslation) {
-    const flag = document.createElement("span");
-    flag.className = "trans-note";
-    flag.textContent = "(translation not yet available — showing English)";
-    li.appendChild(flag);
-  }
-  if (item.citation) li.appendChild(citationEl(item.citation));
-  return li;
-}
-
-function showLoading(title, langCode, message) {
-  $("resTitleText").textContent = title + " ";
-  $("resLang").textContent = document.querySelector('.lang-btn[data-lang="' + langCode + '"] .lang-native')?.textContent || langCode;
-  $("featuredBadge").hidden = true;
-  $("listenBtn").hidden = true;
-  $("honestNote").hidden = true;
-  $("resultSections").innerHTML = "";
-  $("sourcesBlock").innerHTML = "";
-  $("techMetrics").hidden = true;
-  $("resultLoadingText").textContent = message;
-  $("resultLoading").hidden = false;
-  $("results").hidden = false;
-  $("results").scrollIntoView({behavior: "smooth", block: "start"});
-}
-function hideLoading() {
-  $("resultLoading").hidden = true;
-}
-
-function renderResult({title, langLabel, featured, honestNote, claims, sources}) {
-  hideLoading();
-  stopSpeaking();
-  $("resTitleText").textContent = title + " ";
-  $("resLang").textContent = langLabel;
-  $("featuredBadge").hidden = !featured;
-  $("featuredBadge").textContent = featured ? STR("featuredBadge") : "";
-
-  const note = $("honestNote");
-  if (honestNote) {
-    note.textContent = honestNote;
+  // translate the welcome + auth chrome when we have strings for the language
+  const has = !!window.I18N[pendingLang];
+  $("welcomeSub").textContent = S(pendingLang, "heroSub");
+  $("pickerH").textContent = S(pendingLang, "chooseLanguage");
+  $("tabLogin").textContent = S(pendingLang, "loginTab");
+  $("tabRegister").textContent = S(pendingLang, "registerTab");
+  $("loginEmailL").textContent = S(pendingLang, "emailL");
+  $("loginPassL").textContent = S(pendingLang, "passwordL");
+  $("loginBtn").textContent = S(pendingLang, "loginTab");
+  $("regNameL").textContent = S(pendingLang, "nameL");
+  $("regEmailL").textContent = S(pendingLang, "emailL");
+  $("regPassL").textContent = S(pendingLang, "passwordHint");
+  $("regBtn").textContent = S(pendingLang, "registerTab");
+  $("authNote").textContent = S(pendingLang, "authNoteText");
+  const note = $("pickerNote");
+  if (!has && pendingLang !== "en") {
     note.hidden = false;
+    note.textContent = "Full " + pendingLang + " support is on the way — showing English for now.";
   } else {
     note.hidden = true;
   }
-
-  // Group claims: summary / if-it-passes / if-it-fails
-  const groups = [
-    {kind: "summary", label: STR("summaryLabel"), items: []},
-    {kind: "impact_pass", label: STR("impactPass"), items: []},
-    {kind: "impact_fail", label: STR("impactFail"), items: []},
-  ];
-  for (const item of claims) {
-    const g = groups.find((x) => x.kind === (item.kind || "summary")) || groups[0];
-    g.items.push(item);
-  }
-  const secs = $("resultSections");
-  secs.innerHTML = "";
-  for (const g of groups) {
-    if (!g.items.length) continue;
-    const h = document.createElement("h3");
-    h.className = "group-h";
-    h.textContent = g.label;
-    secs.appendChild(h);
-    const ol = document.createElement("ol");
-    ol.className = "claims";
-    for (const item of g.items) ol.appendChild(claimEl(item));
-    secs.appendChild(ol);
-  }
-  if ("speechSynthesis" in window &&
-      document.querySelectorAll("#resultSections .claim").length) {
-    $("listenBtn").hidden = false;
-  }
-
-  const sb = $("sourcesBlock");
-  sb.innerHTML = "";
-  if (sources && sources.length) {
-    const h = document.createElement("h3");
-    h.className = "sources-h";
-    h.textContent = STR("sourcesFound");
-    sb.appendChild(h);
-    for (const s of sources) {
-      const div = document.createElement("div");
-      div.className = "source-item";
-      const t = document.createElement("p");
-      t.className = "source-text";
-      t.textContent = s.text.length > 400 ? s.text.slice(0, 400) + "…" : s.text;
-      div.appendChild(t);
-      div.appendChild(citationEl(s));
-      sb.appendChild(div);
-    }
-  }
-
-  $("techMetrics").hidden = true;
-  $("results").hidden = false;
-  $("results").scrollIntoView({behavior: "smooth", block: "start"});
+  document.documentElement.lang = pendingLang;
+  document.documentElement.dir = (pendingLang === "fa" || pendingLang === "ar") ? "rtl" : "ltr";
 }
-
-// ---------- featured cards ----------
-function renderEvalLine() {
-  const line = $("evalSummaryLine");
-  if (!lastEval) { line.textContent = ""; return; }
-  const s = lastEval;
-  const langs = (s.languages || []).length;
-  line.textContent = STR("evalLine")
-    .replace("{g}", s.grounded).replace("{t}", s.total_claims)
-    .replace("{f}", s.advisory_flags).replace("{v}", s.verdict)
-    .replace("{d}", s.generated || "").replace("{n}", s.entries)
-    .replace("{l}", langs);
-}
-async function loadEvalSummary() {
-  try {
-    const res = await fetch("/api/eval-summary");
-    if (!res.ok) throw new Error("unavailable");
-    lastEval = await res.json();
-  } catch (e) {
-    lastEval = null;
-  }
-  renderEvalLine();
-  if (!lastEval) $("evalSummaryLine").textContent = STR("evalUnavailable");
-}
-async function loadCards() {
-  try {
-    const res = await fetch("/api/golden");
-    const cards = await res.json();
-    const wrap = $("cards");
-    wrap.innerHTML = "";
-    if (!cards.length) {
-      wrap.innerHTML = "";
-      const p = document.createElement("p");
-      p.className = "muted";
-      p.textContent = STR("noExamples");
-      wrap.appendChild(p);
-      return;
-    }
-    for (const c of cards) {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "topic-card";
-      const t = document.createElement("span");
-      t.className = "topic-card-title";
-      t.textContent = c.title;
-      b.appendChild(t);
-      if (c.topic) {
-        const d = document.createElement("span");
-        d.className = "topic-card-desc";
-        d.textContent = c.topic;
-        b.appendChild(d);
-      }
-      const chip = document.createElement("span");
-      chip.className = "topic-card-chip";
-      chip.textContent = STR("verifiedChip");
-      b.appendChild(chip);
-      b.addEventListener("click", () => loadFeatured(c.id));
-      wrap.appendChild(b);
-    }
-  } catch (e) {
-    const wrap = $("cards");
-    wrap.innerHTML = "";
-    const p = document.createElement("p");
-    p.className = "muted";
-    p.textContent = STR("loadError");
-    wrap.appendChild(p);
-  }
-}
-
-async function loadFeatured(id) {
-  const lang = currentLang();
-  showLoading(STR("featuredTitle"), lang, STR("loadingExample"));
-  $("status").textContent = "";
-  try {
-    const res = await fetch("/api/golden/" + encodeURIComponent(id) +
-                            "?language=" + encodeURIComponent(lang));
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "request failed");
-    renderResult({
-      title: data.title,
-      langLabel: document.querySelector('.lang-btn[data-lang="' + lang + '"] .lang-native')?.textContent || lang,
-      featured: true,
-      honestNote: null,
-      claims: data.claims.map((c) => ({
-        kind: c.kind || "summary",
-        text: c.text,
-        citation: c.citation,
-        missingTranslation: !c.language_available && lang !== "en",
-      })),
-      sources: null,
-    });
-  } catch (e) {
-    hideLoading();
-    $("honestNote").textContent = "Error: " + e.message;
-    $("honestNote").hidden = false;
-  }
-}
-
-// ---------- local notices ----------
-async function loadNotices() {
-  const wrap = $("notices");
-  try {
-    const res = await fetch("/api/notices");
-    const items = await res.json();
-    wrap.innerHTML = "";
-    for (const n of items) {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "notice-item";
-      const t = document.createElement("span");
-      t.className = "notice-title";
-      t.textContent = n.title;
-      b.appendChild(t);
-      if (n.date) {
-        const d = document.createElement("span");
-        d.className = "notice-date";
-        d.textContent = n.date;
-        b.appendChild(d);
-      }
-      b.addEventListener("click", () => openChunk(n.source_file, n.page));
-      wrap.appendChild(b);
-    }
-  } catch (e) {
-    wrap.innerHTML = "";
-    const p = document.createElement("p");
-    p.className = "muted";
-    p.textContent = STR("noticesFailed");
-    wrap.appendChild(p);
-  }
-}
-
-// ---------- 311 tap-to-report (honest: builds a report, never files it) ----------
-let reportIssue = null;
-let reportCoords = null;
-document.querySelectorAll(".issue-btn").forEach((b) => {
+document.querySelectorAll(".lang-pill").forEach((b) => {
   b.addEventListener("click", () => {
-    document.querySelectorAll(".issue-btn").forEach((x) => x.classList.remove("active"));
-    b.classList.add("active");
-    reportIssue = b.dataset.issueEn;
+    pendingLang = b.dataset.lang;
+    localStorage.setItem(LANG_KEY, pendingLang);
+    paintPicker();
   });
 });
-$("gpsBtn").addEventListener("click", () => {
-  if (!("geolocation" in navigator)) return;
-  $("gpsStatus").textContent = "…";
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      reportCoords = pos.coords.latitude.toFixed(5) + ", " + pos.coords.longitude.toFixed(5);
-      $("gpsStatus").textContent = STR("locationReady");
-    },
-    () => {
-      reportCoords = null;
-      $("gpsStatus").textContent = STR("gpsDenied");
-    },
-    {timeout: 10000}
-  );
+
+// ---- auth tabs ----
+document.querySelectorAll(".auth-tab").forEach((t) => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".auth-tab").forEach((x) => x.classList.remove("active"));
+    t.classList.add("active");
+    const reg = t.dataset.tab === "register";
+    $("loginForm").hidden = reg;
+    $("registerForm").hidden = !reg;
+  });
 });
-$("genReport").addEventListener("click", () => {
-  const desc = $("reportText").value.trim();
-  const lines = [
-    "CivicVoice neighborhood report",
-    "Issue: " + (reportIssue || "not selected"),
-    "Description: " + (desc || "—"),
-    "Location: " + (reportCoords ? reportCoords + " (GPS)" : "not captured — add nearest cross streets above"),
-    "Date: " + new Date().toISOString().slice(0, 10),
-  ];
-  $("reportPre").textContent = lines.join("\n");
-  $("reportOut").hidden = false;
-  $("copyStatus").textContent = "";
-  $("reportOut").scrollIntoView({behavior: "smooth", block: "nearest"});
-});
-$("copyReport").addEventListener("click", async () => {
-  try {
-    await navigator.clipboard.writeText($("reportPre").textContent);
-    $("copyStatus").textContent = STR("copied");
-  } catch (e) {
-    $("copyStatus").textContent = "";
-  }
-});
-
-// ---------- free-text question ----------
-async function ask() {
-  const query = $("query").value.trim();
-  const lang = currentLang();
-  if (!query) { $("status").textContent = STR("typeQuestion"); return; }
-
-  $("askBtn").disabled = true;
-  $("askBtn").classList.add("loading");
-  $("status").textContent = "";
-  showLoading(STR("questionTitle"), lang, STR("searching"));
-
-  try {
-    const res = await fetch("/api/ask", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({query, language: lang, k: 5}),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "request failed");
-
-    if (data.mode === "mock_sources") {
-      renderResult({
-        title: STR("questionTitle"),
-        langLabel: document.querySelector('.lang-btn[data-lang="' + lang + '"] .lang-native')?.textContent || lang,
-        featured: false,
-        honestNote: data.message,
-        claims: [],
-        sources: data.sources,
-      });
-    } else {
-      renderResult({
-        title: STR("questionTitle"),
-        langLabel: document.querySelector('.lang-btn[data-lang="' + data.language + '"] .lang-native')?.textContent || data.language,
-        featured: false,
-        honestNote: data.note || null,
-        claims: data.summary,
-        sources: null,
-      });
-      const ev = data.eval;
-      $("mValidity").textContent = Number(ev.citation_validity).toFixed(2);
-      $("mGrounding").textContent = Number(ev.grounding_score).toFixed(2);
-      $("mFlags").textContent = ev.advisory_flags.length ? ev.advisory_flags.join("; ") : "none";
-      $("mVerdict").textContent = ev.verdict;
-      $("techMetrics").hidden = false;
-    }
-  } catch (e) {
-    hideLoading();
-    $("honestNote").textContent = "Error: " + e.message;
-    $("honestNote").hidden = false;
-  } finally {
-    $("askBtn").disabled = false;
-    $("askBtn").classList.remove("loading");
-  }
+if (location.hash === "#login") {
+  document.querySelector('[data-tab="login"]').click();
 }
 
-$("askBtn").addEventListener("click", ask);
-$("query").addEventListener("keydown", (e) => { if (e.key === "Enter") ask(); });
+async function postJSON(url, body) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  return {res, data};
+}
 
-// ---------- boot ----------
-(function boot() {
-  const saved = localStorage.getItem(LANG_KEY);
-  if (!saved) openGatekeeper();
-  applyLanguage(saved || "en");
-  loadEvalSummary();
-  loadNotices();
-})();
+$("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("loginErr").hidden = true;
+  const {res, data} = await postJSON("/api/login", {
+    email: $("loginEmail").value.trim(),
+    password: $("loginPass").value,
+  });
+  if (!res.ok || !data.ok) {
+    $("loginErr").textContent = "Couldn't log you in — check your email and password.";
+    $("loginErr").hidden = false;
+    return;
+  }
+  location.href = "/dashboard";
+});
+
+$("registerForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("regErr").hidden = true;
+  const {res, data} = await postJSON("/api/register", {
+    name: $("regName").value.trim(),
+    email: $("regEmail").value.trim(),
+    password: $("regPass").value,
+    language: pendingLang,
+  });
+  if (!res.ok || !data.ok) {
+    const msg = data.error === "email_taken" ? "That email already has an account — try logging in."
+      : data.error === "bad_password" ? "Password needs at least 6 characters."
+      : "Couldn't create the account — check the fields and try again.";
+    $("regErr").textContent = msg;
+    $("regErr").hidden = false;
+    return;
+  }
+  location.href = "/dashboard";
+});
+
+paintPicker();
 </script>
 </body>
 </html>

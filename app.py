@@ -19,19 +19,26 @@ Repo stays key-free: the LLM key is read only from the environment.
 import glob
 import json
 import os
+import secrets
+from functools import wraps
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, session, redirect, url_for
 
 from retriever import retrieve
 from summarizer import summarize, SUPPORTED_LANGUAGES
 from eval import evaluate
-from i18n import UI_STRINGS, SPEECH_LOCALES
+from i18n import UI_STRINGS, SPEECH_LOCALES, PICKER_LANGUAGES, EXTRA_LANGUAGES, is_verified
+import auth as accounts
+import translate as mt
+import tts_service as tts
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PARSED_DIR = os.path.join(BASE_DIR, "data", "parsed")
 GOLDEN_DIR = os.path.join(BASE_DIR, "data", "golden")
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("CIVICVOICE_SECRET_KEY") or secrets.token_hex(32)
+app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024  # 8 MB uploads
 
 LANG_NAMES = {
     "en": "English",
@@ -40,6 +47,12 @@ LANG_NAMES = {
     "zh": "Mandarin (Simplified)",
     "es": "Spanish",
     "fa": "Farsi",
+    "vi": "Vietnamese",
+    "tl": "Tagalog",
+    "ko": "Korean",
+    "ar": "Arabic",
+    "ja": "Japanese",
+    "ru": "Russian",
 }
 
 NATIVE_LANG_NAMES = {
@@ -49,6 +62,12 @@ NATIVE_LANG_NAMES = {
     "zh": "中文",
     "es": "Español",
     "fa": "فارسی",
+    "vi": "Tiếng Việt",
+    "tl": "Tagalog",
+    "ko": "한국어",
+    "ar": "العربية",
+    "ja": "日本語",
+    "ru": "Русский",
 }
 
 # True when no LLM key is configured -> /api/ask returns sources + honest
@@ -113,7 +132,9 @@ def _validate_language(language):
     if not isinstance(language, str):
         return None
     language = language.strip().lower()
-    if language not in SUPPORTED_LANGUAGES:
+    # All 12 picker languages are accepted; only the 6 verified ones have
+    # hand-written content — the rest fall back to English honestly.
+    if language not in PICKER_LANGUAGES:
         return None
     return language
 
@@ -130,13 +151,167 @@ def index():
     return render_template(
         "index.html",
         languages=[
-            {"code": c, "name": LANG_NAMES[c], "native": NATIVE_LANG_NAMES[c]}
-            for c in SUPPORTED_LANGUAGES
+            {"code": c, "name": LANG_NAMES[c], "native": NATIVE_LANG_NAMES[c],
+             "verified": is_verified(c)}
+            for c in PICKER_LANGUAGES
         ],
         mock_mode=MOCK_MODE,
         ui_strings=UI_STRINGS,
         speech_locales=SPEECH_LOCALES,
+        translate_available=mt.available(),
+        tts_available=tts.available(),
     )
+
+
+# ---------------------------------------------------------------------------
+# Accounts: register / login / logout / dashboard.
+# ---------------------------------------------------------------------------
+
+def _current_user():
+    uid = session.get("user_id")
+    return accounts.get_user(uid) if uid else None
+
+
+def login_required(view):
+    @wraps(view)
+    def wrapper(*args, **kwargs):
+        if _current_user() is None:
+            return redirect(url_for("index") + "#login")
+        return view(*args, **kwargs)
+    return wrapper
+
+
+@app.get("/dashboard")
+@login_required
+def dashboard():
+    user = _current_user()
+    return render_template(
+        "dashboard.html",
+        user=user,
+        languages=[
+            {"code": c, "name": LANG_NAMES[c], "native": NATIVE_LANG_NAMES[c],
+             "verified": is_verified(c)}
+            for c in PICKER_LANGUAGES
+        ],
+        ui_strings=UI_STRINGS,
+        speech_locales=SPEECH_LOCALES,
+        translate_available=mt.available(),
+        tts_available=tts.available(),
+        reports=accounts.list_reports(user["id"]),
+    )
+
+
+@app.post("/api/register")
+def api_register():
+    data = request.get_json(force=True, silent=True) or {}
+    user, err = accounts.create_user(
+        data.get("email"), data.get("name"), data.get("password"),
+        data.get("language", "en"))
+    if err:
+        return jsonify({"ok": False, "error": err}), 400
+    session["user_id"] = user["id"]
+    return jsonify({"ok": True, "user": user})
+
+
+@app.post("/api/login")
+def api_login():
+    data = request.get_json(force=True, silent=True) or {}
+    user = accounts.verify_user(data.get("email"), data.get("password"))
+    if user is None:
+        return jsonify({"ok": False, "error": "bad_credentials"}), 401
+    session["user_id"] = user["id"]
+    return jsonify({"ok": True, "user": user})
+
+
+@app.post("/api/logout")
+def api_logout():
+    session.pop("user_id", None)
+    return jsonify({"ok": True})
+
+
+@app.post("/api/save-report")
+@login_required
+def api_save_report():
+    data = request.get_json(force=True, silent=True) or {}
+    rid = accounts.save_report(
+        session["user_id"],
+        (data.get("issue") or "")[:80],
+        (data.get("description") or "")[:2000],
+        (data.get("location") or "")[:200],
+    )
+    return jsonify({"ok": True, "report_id": rid})
+
+
+# ---------------------------------------------------------------------------
+# Machine translation + TTS (Abhinav's keys; honest fallback when absent).
+# ---------------------------------------------------------------------------
+
+@app.post("/api/translate")
+def api_translate():
+    """Translate text into the target language. 503 when no key is
+    configured — the frontend then shows an honest 'not connected' state."""
+    if not mt.available():
+        return jsonify({"ok": False, "error": "translate_not_connected"}), 503
+    data = request.get_json(force=True, silent=True) or {}
+    text = (data.get("text") or "")[:4000]
+    target = (data.get("target") or "en")[:10]
+    source = (data.get("source") or "en")[:10]
+    out = mt.translate(text, target, source)
+    if out is None:
+        return jsonify({"ok": False, "error": "translate_failed"}), 502
+    return jsonify({"ok": True, "text": out})
+
+
+@app.post("/api/tts")
+def api_tts():
+    """MP3 audio for text in the requested BCP-47 language. 503 when no key
+    is configured — the frontend falls back to the browser's built-in voice."""
+    if not tts.available():
+        return jsonify({"ok": False, "error": "tts_not_connected"}), 503
+    data = request.get_json(force=True, silent=True) or {}
+    text = (data.get("text") or "")[:2000]
+    lang = (data.get("lang") or "en-US")[:12]
+    audio = tts.synthesize(text, lang)
+    if audio is None:
+        return jsonify({"ok": False, "error": "tts_failed"}), 502
+    return app.response_class(audio, mimetype="audio/mpeg")
+
+
+# ---------------------------------------------------------------------------
+# Document upload: extract text; summarize only with an LLM key.
+# ---------------------------------------------------------------------------
+
+@app.post("/api/upload")
+@login_required
+def api_upload():
+    f = request.files.get("file")
+    if f is None or not f.filename:
+        return jsonify({"ok": False, "error": "no_file"}), 400
+    name = f.filename.lower()
+    try:
+        if name.endswith(".pdf"):
+            from pypdf import PdfReader
+            reader = PdfReader(f.stream)
+            text = "\n".join((p.extract_text() or "") for p in reader.pages)
+        elif name.endswith(".txt"):
+            text = f.stream.read().decode("utf-8", errors="replace")
+        else:
+            return jsonify({"ok": False, "error": "bad_type"}), 400
+    except Exception:
+        return jsonify({"ok": False, "error": "extract_failed"}), 400
+    text = (text or "").strip()[:20000]
+    if not text:
+        return jsonify({"ok": False, "error": "empty_document"}), 400
+    # Summaries need the LLM key; without it we return the extracted text
+    # honestly instead of fabricating one.
+    return jsonify({
+        "ok": True,
+        "filename": f.filename,
+        "chars": len(text),
+        "text": text[:4000],
+        "summary": None,
+        "note": "extracted_text_only" if MOCK_MODE else "summarized",
+    })
 
 
 @app.get("/api/golden")
@@ -164,21 +339,24 @@ def golden_entry(entry_id):
     language = _validate_language(request.args.get("language"))
     if language is None:
         return jsonify({"error": "unsupported language"}), 400
+    bilingual = request.args.get("bilingual") == "1"
     claims = []
     for c in entry.get("claims", []):
         texts = c.get("text", {}) or {}
         available = language in texts and bool(texts[language])
         # Never show English text under a non-English label silently; when the
         # requested translation is missing, say so plainly.
-        claims.append(
-            {
-                "id": c.get("id"),
-                "kind": c.get("kind", "summary"),
-                "text": texts[language] if available else texts.get("en"),
-                "language_available": available,
-                "citation": c.get("citation", {}),
-            }
-        )
+        claim = {
+            "id": c.get("id"),
+            "kind": c.get("kind", "summary"),
+            "text": texts[language] if available else texts.get("en"),
+            "language_available": available,
+            "citation": c.get("citation", {}),
+        }
+        if bilingual:
+            # English companion for the bilingual display (native + English).
+            claim["text_en"] = texts.get("en")
+        claims.append(claim)
     return jsonify(
         {
             "id": entry["id"],

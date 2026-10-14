@@ -133,3 +133,24 @@ SUBMISSION.md                   CAC submission draft (student reviews before fil
 ```
 
 *Built by Abhinav Upadhyay, CA-14. Repo stays key-free: keys come from the environment only.*
+
+## v3 — accounts, 12 languages, personal dashboard (2026-10-14)
+
+- **Landing:** warm welcome + horizontal scroll picker with 12 Bay Area languages
+  (English, Español, हिन्दी, ਪੰਜਾਬੀ, 中文, فارسی, Tiếng Việt, Tagalog, 한국어,
+  العربية, 日本語, Русский), then a login / create-account portal.
+- **Accounts:** SQLite (`data/users.db`, gitignored), werkzeug password hashing,
+  Flask sessions. Each user gets a personal dashboard.
+- **Dashboard tabs:** 📰 Council news · 🗳️ Ballot information · 🔧 City tasks
+  (311 report flow, reports saved per account) · 💬 Ask about city laws
+  (typed or spoken questions + PDF/txt document upload).
+- **Bilingual display:** interface and claims render in the user's language with
+  the English version in smaller text beneath.
+- **Machine translation + premium TTS:** `translate.py` / `tts_service.py` are
+  key-driven seams. Set `CIVICVOICE_TRANSLATE_KEY` and `CIVICVOICE_TTS_KEY`
+  (Google provider by default) and `/api/translate` + `/api/tts` go live; with
+  no keys they return 503 and the UI falls back honestly (browser TTS, English
+  text with a "not connected" notice). Nothing is ever faked.
+- The 6 verified languages keep hand-written UI strings + golden content; the 6
+  extended languages get English fallback + live machine translation when keys
+  are connected.
