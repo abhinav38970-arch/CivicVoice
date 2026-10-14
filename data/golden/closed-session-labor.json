@@ -1,0 +1,54 @@
+{
+  "claims": [
+    {
+      "citation": {
+        "page": 0,
+        "source_file": "20250318_CC_Minutes__CLOSED_SESSION.pdf"
+      },
+      "id": "c1",
+      "text": {
+        "en": "On March 18, 2025, the City Council convened in closed session under Government Code 54957.6.",
+        "es": "El 18 de marzo de 2025, el Concejo Municipal se reunió en sesión cerrada bajo el Código de Gobierno 54957.6.",
+        "fa": "در ۱۸ مارس ۲۰۲۵، شورای شهر بر اساس بخش ۵۴۹۵۷.۶ قانون دولتی در جلسه غیرعلنی تشکیل جلسه داد.",
+        "hi": "18 मार्च, 2025 को सिटी काउंसिल ने सरकारी संहिता 54957.6 के तहत बंद सत्र में बैठक की।",
+        "pa": "18 ਮਾਰਚ, 2025 ਨੂੰ ਸਿਟੀ ਕੌਂਸਲ ਨੇ ਸਰਕਾਰੀ ਕੋਡ 54957.6 ਤਹਿਤ ਬੰਦ ਸੈਸ਼ਨ ਵਿੱਚ ਮੀਟਿੰਗ ਕੀਤੀ।",
+        "zh": "2025年3月18日，市议会根据《政府法典》第54957.6条召开了闭门会议。"
+      }
+    },
+    {
+      "citation": {
+        "page": 0,
+        "source_file": "20250318_CC_Minutes__CLOSED_SESSION.pdf"
+      },
+      "id": "c2",
+      "text": {
+        "en": "Nine employee organizations were represented in the labor talks, including the Fremont Police Association and Teamsters Local 856.",
+        "es": "Nueve organizaciones de empleados participaron en las negociaciones laborales, incluidas la Asociación de Policía de Fremont y Teamsters Local 856.",
+        "fa": "نه سازمان کارمندی در مذاکرات کارگری نمایندگی داشتند، از جمله انجمن پلیس فریمونت و تیمسترز لوکال ۸۵۶.",
+        "hi": "श्रम वार्ता में नौ कर्मचारी संगठनों का प्रतिनिधित्व था, जिनमें फ्रेमोंट पुलिस एसोसिएशन और टीमस्टर्स लोकल 856 शामिल थे।",
+        "pa": "ਮਜ਼ਦੂਰ ਗੱਲਬਾਤ ਵਿੱਚ ਨੌਂ ਕਰਮਚਾਰੀ ਸੰਗਠਨਾਂ ਦੀ ਨੁਮਾਇੰਦਗੀ ਸੀ, ਜਿਨ੍ਹਾਂ ਵਿੱਚ ਫ੍ਰੀਮੋਂਟ ਪੁਲਿਸ ਐਸੋਸੀਏਸ਼ਨ ਅਤੇ ਟੀਮਸਟਰਜ਼ ਲੋਕਲ 856 ਸ਼ਾਮਲ ਸਨ।",
+        "zh": "共有九个雇员组织参加了劳资谈判，包括弗里蒙特警察协会和卡车司机工会第856分会。"
+      }
+    },
+    {
+      "citation": {
+        "page": 1,
+        "source_file": "20250304_REVISED_Closed_Session_Notice_Labor_Negotiations.pdf"
+      },
+      "id": "c3",
+      "text": {
+        "en": "The March 4, 2025 special meeting notice listed Mayor Salwan as calling the meeting.",
+        "es": "El aviso de la reunión especial del 4 de marzo de 2025 indicó que el alcalde Salwan convocó la reunión.",
+        "fa": "اطلاعیه جلسه ویژه ۴ مارس ۲۰۲۵ شهردار سالوان را به عنوان دعوت‌کننده جلسه معرفی کرد.",
+        "hi": "4 मार्च, 2025 की विशेष बैठक की सूचना में मेयर सलवान को बैठक बुलाने वाले के रूप में दर्ज किया गया था।",
+        "pa": "4 ਮਾਰਚ, 2025 ਦੀ ਵਿਸ਼ੇਸ਼ ਮੀਟਿੰਗ ਦੇ ਨੋਟਿਸ ਵਿੱਚ ਮੇਅਰ ਸਲਵਾਨ ਨੂੰ ਮੀਟਿੰਗ ਬੁਲਾਉਣ ਵਾਲੇ ਵਜੋਂ ਦਰਜ ਕੀਤਾ ਗਿਆ ਸੀ।",
+        "zh": "2025年3月4日特别会议的通知中列明，会议由市长萨尔万召集。"
+      }
+    }
+  ],
+  "id": "closed-session-labor",
+  "note": "curated featured example, hand-verified 2026-10-12; not live model output",
+  "query": "city council closed session labor negotiations",
+  "topic": "City council closed sessions on labor negotiations",
+  "card_title": "🏛️ Council labor talks"
+}

@@ -1,0 +1,54 @@
+{
+  "claims": [
+    {
+      "citation": {
+        "page": 5,
+        "source_file": "2025_MidYear_Progress_Report.pdf"
+      },
+      "id": "c1",
+      "text": {
+        "en": "The Winter Relief Program moved 46% of its participants into housing, shelter, or the Safe Parking Program — the city's best rate so far.",
+        "es": "El Programa de Ayuda de Invierno trasladó al 46% de sus participantes a vivienda, refugio o el Programa de Estacionamiento Seguro: la mejor tasa de la ciudad hasta la fecha.",
+        "fa": "برنامه امداد زمستانی ۴۶ درصد از شرکت‌کنندگان خود را به مسکن، پناهگاه یا برنامه پارکینگ امن منتقل کرد — بهترین نرخ شهر تاکنون.",
+        "hi": "विंटर रिलीफ प्रोग्राम ने अपने 46% प्रतिभागियों को आवास, आश्रय या सेफ पार्किंग प्रोग्राम में पहुंचाया — यह शहर की अब तक की सबसे अच्छी दर है।",
+        "pa": "ਵਿੰਟਰ ਰਿਲੀਫ ਪ੍ਰੋਗਰਾਮ ਨੇ ਆਪਣੇ 46% ਭਾਗੀਦਾਰਾਂ ਨੂੰ ਰਿਹਾਇਸ਼, ਸ਼ੈਲਟਰ ਜਾਂ ਸੇਫ ਪਾਰਕਿੰਗ ਪ੍ਰੋਗਰਾਮ ਵਿੱਚ ਪਹੁੰਚਾਇਆ — ਇਹ ਸ਼ਹਿਰ ਦੀ ਹੁਣ ਤੱਕ ਦੀ ਸਭ ਤੋਂ ਵਧੀਆ ਦਰ ਹੈ।",
+        "zh": "冬季救助计划将其46%的参与者转入住房、收容所或安全停车计划——这是该市迄今为止最好的成绩。"
+      }
+    },
+    {
+      "citation": {
+        "page": 5,
+        "source_file": "2025_MidYear_Progress_Report.pdf"
+      },
+      "id": "c2",
+      "text": {
+        "en": "The Safe Parking Program added a church as its sixth site and helped 26 residents in FY 24/25.",
+        "es": "El Programa de Estacionamiento Seguro añadió una iglesia como su sexto sitio y ayudó a 26 residentes en el año fiscal 24/25.",
+        "fa": "برنامه پارکینگ امن یک کلیسا را به عنوان ششمین محل خود اضافه کرد و در سال مالی ۲۴/۲۵ به ۲۶ ساکن کمک کرد.",
+        "hi": "सेफ पार्किंग प्रोग्राम ने एक चर्च को अपने छठे स्थल के रूप में जोड़ा और वित्त वर्ष 24/25 में 26 निवासियों की मदद की।",
+        "pa": "ਸੇਫ ਪਾਰਕਿੰਗ ਪ੍ਰੋਗਰਾਮ ਨੇ ਇੱਕ ਚਰਚ ਨੂੰ ਆਪਣੇ ਛੇਵੇਂ ਸਥਾਨ ਵਜੋਂ ਜੋੜਿਆ ਅਤੇ ਵਿੱਤੀ ਸਾਲ 24/25 ਵਿੱਚ 26 ਨਿਵਾਸੀਆਂ ਦੀ ਮਦਦ ਕੀਤੀ।",
+        "zh": "安全停车计划新增了一座教堂作为第六个站点，并在24/25财年帮助了26名居民。"
+      }
+    },
+    {
+      "citation": {
+        "page": 5,
+        "source_file": "2025_MidYear_Progress_Report.pdf"
+      },
+      "id": "c3",
+      "text": {
+        "en": "The city approved a new contract to operate the Housing Navigation Center for an additional two years.",
+        "es": "La ciudad aprobó un nuevo contrato para operar el Centro de Orientación de Vivienda durante dos años más.",
+        "fa": "شهر قرارداد جدیدی را برای ادامه فعالیت مرکز راهنمایی مسکن به مدت دو سال دیگر تصویب کرد.",
+        "hi": "शहर ने हाउसिंग नेविगेशन सेंटर को दो और वर्षों तक चलाने के लिए एक नए अनुबंध को मंजूरी दी।",
+        "pa": "ਸ਼ਹਿਰ ਨੇ ਹਾਊਸਿੰਗ ਨੇਵੀਗੇਸ਼ਨ ਸੈਂਟਰ ਨੂੰ ਦੋ ਹੋਰ ਸਾਲਾਂ ਤੱਕ ਚਲਾਉਣ ਲਈ ਇੱਕ ਨਵੇਂ ਠੇਕੇ ਨੂੰ ਮਨਜ਼ੂਰੀ ਦਿੱਤੀ।",
+        "zh": "市政府批准了一份新合同，将住房导航中心的运营再延长两年。"
+      }
+    }
+  ],
+  "id": "midyear-winter-relief",
+  "note": "curated featured example, hand-verified 2026-10-12; not live model output",
+  "query": "homelessness winter relief safe parking program",
+  "topic": "Homelessness response: Winter Relief and Safe Parking programs",
+  "card_title": "🏠 Winter relief & safe parking"
+}

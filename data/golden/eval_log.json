@@ -1,0 +1,261 @@
+{
+ "generated": "2026-10-13",
+ "method": "Each golden claim was expanded into 6 per-language summaries (claim text + claim_en for non-English) and run through eval.evaluate() against the full parsed corpus (1258 chunks). Non-English claims are scored via claim_en against English chunk text (overlap proves the CONTENT is in the source, not that the translation is faithful); citations are matched by (source_file, page).",
+ "entries": [
+  {
+   "id": "charter-advisory",
+   "languages": {
+    "en": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "hi": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "pa": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "zh": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "es": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "fa": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    }
+   }
+  },
+  {
+   "id": "closed-session-labor",
+   "languages": {
+    "en": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "hi": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "pa": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "zh": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "es": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "fa": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    }
+   }
+  },
+  {
+   "id": "midyear-winter-relief",
+   "languages": {
+    "en": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "hi": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "pa": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "zh": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "es": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "fa": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    }
+   }
+  },
+  {
+   "id": "prop1-2026-housing-bond",
+   "languages": {
+    "en": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "hi": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "pa": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "zh": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "es": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "fa": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    }
+   }
+  },
+  {
+   "id": "prop2-school-bonds",
+   "languages": {
+    "en": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "hi": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "pa": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "zh": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "es": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    },
+    "fa": {
+     "verdict": "PASS",
+     "citation_validity": 1.0,
+     "grounding_score": 1.0,
+     "advisory_flags": []
+    }
+   }
+  }
+ ],
+ "per_language": {
+  "en": {
+   "claims": 15,
+   "grounded": 15,
+   "evaluated": 15,
+   "cross_lingual_unevaluated": 0,
+   "advisory_flags_total": 0,
+   "grounding_rate_on_evaluated": 1.0
+  },
+  "hi": {
+   "claims": 15,
+   "grounded": 15,
+   "evaluated": 15,
+   "cross_lingual_unevaluated": 0,
+   "advisory_flags_total": 0,
+   "grounding_rate_on_evaluated": 1.0
+  },
+  "pa": {
+   "claims": 15,
+   "grounded": 15,
+   "evaluated": 15,
+   "cross_lingual_unevaluated": 0,
+   "advisory_flags_total": 0,
+   "grounding_rate_on_evaluated": 1.0
+  },
+  "zh": {
+   "claims": 15,
+   "grounded": 15,
+   "evaluated": 15,
+   "cross_lingual_unevaluated": 0,
+   "advisory_flags_total": 0,
+   "grounding_rate_on_evaluated": 1.0
+  },
+  "es": {
+   "claims": 15,
+   "grounded": 15,
+   "evaluated": 15,
+   "cross_lingual_unevaluated": 0,
+   "advisory_flags_total": 0,
+   "grounding_rate_on_evaluated": 1.0
+  },
+  "fa": {
+   "claims": 15,
+   "grounded": 15,
+   "evaluated": 15,
+   "cross_lingual_unevaluated": 0,
+   "advisory_flags_total": 0,
+   "grounding_rate_on_evaluated": 1.0
+  }
+ }
+}

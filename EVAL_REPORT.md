@@ -1,0 +1,145 @@
+# CivicVoice — Eval Report (2026-10-12)
+
+This report documents the accuracy harness (`eval.py`), what was actually run
+through it, and — just as important — what it cannot prove. Written for
+technical judges: no theater, only what the code did.
+
+## 1. What the harness checks
+
+`evaluate(summary_json, retrieved_chunks)` returns three metrics plus a
+verdict:
+
+- **citation_validity** — fraction of claims whose `(source_file, page)`
+  citation matches a retrieved chunk (page ranges supported on both sides).
+- **grounding_score** — fraction of *evaluated* claims whose keyword overlap
+  with the cited chunk's text reaches the 0.15 threshold
+  (`overlap = |claim keywords ∩ chunk keywords| / |claim keywords|`).
+- **advisory_flags** — voting-advice language hits across all six languages,
+  from the single shared pattern list in `advisory.py`.
+
+**Verdict FAIL** iff any advisory flag fires, citation_validity < 1.0, or the
+grounding score over *evaluated* claims is < 0.5.
+
+## 2. Method: what was actually run
+
+Two independent runs, both deterministic, no LLM, no API key:
+
+1. **`python eval.py` self-tests (11/11 pass).** English control cases
+   (clean PASS / bogus-citation FAIL / advisory FAIL), plus multilingual
+   grounding cases: grounded Devanagari, Gurmukhi, Simplified Chinese, and
+   Farsi claims (each ≥ 0.5 overlap), an ungrounded claim scoring 0.0, a
+   cross-lingual claim with no English source marked `cross_lingual_unevaluated`
+   (excluded from FAIL — verdict PASS on validity + no advisory flags), and a
+   same-script Chinese claim exercising the character-bigram fallback
+   (overlap 0.71).
+2. **Golden-set run over `data/golden/`** — every claim in all 6 languages
+   (English, Hindi, Punjabi, Simplified Chinese, Spanish, Farsi) passed
+   through `evaluate()` against the full parsed corpus (1,258 chunks across
+   49 official source files as of 2026-10-13; eval_log.json regenerated that day).
+   Machine-readable log: `data/golden/eval_log.json`.
+   Regenerate with: `python gen_eval_log.py` (repo root).
+
+The golden set is **hand-written, hand-verified** — each claim was checked by
+a person against the cited page text, then translated by hand. Every golden
+file carries `"note": "curated featured example, hand-verified 2026-10-12;
+not live model output"`. They are demonstration fixtures, not model output.
+
+## 3. Results: per-language table
+
+| Language | Claims | Grounded | Evaluated | Grounding rate (on evaluated) | Advisory flags |
+|---|---|---|---|---|---|
+| English (en) | 15 | 15 | 15 | 1.00 | 0 |
+| Hindi (hi) | 15 | 15 | 15 | 1.00 | 0 |
+| Punjabi (pa) | 15 | 15 | 15 | 1.00 | 0 |
+| Chinese (zh) | 15 | 15 | 15 | 1.00 | 0 |
+| Spanish (es) | 15 | 15 | 15 | 1.00 | 0 |
+| Farsi (fa) | 15 | 15 | 15 | 1.00 | 0 |
+
+- 15 claims per language = 5 curated entries × 3 claims each
+  (`prop2-school-bonds`, `closed-session-labor`, `midyear-winter-relief`,
+  `charter-advisory`, `prop1-2026-housing-bond` — the November 2026
+  Proposition 1 housing bond, added 2026-10-13).
+  The log was regenerated 2026-10-13 against the final set
+  (`python gen_eval_log.py`).
+- All citations valid; no advisory-language flags in any language.
+
+## 4. Cross-lingual grounding policy (the honest version)
+
+Keyword overlap can only validate a claim against chunk text written in the
+**same script**. A Devanagari claim will never keyword-overlap English chunk
+text — and scoring it that way would be meaningless. So:
+
+- A claim dict may carry **`claim_en`**: the English source text the
+  non-English claim was translated from.
+- When claim and chunk are in different scripts, grounding is computed
+  against `claim_en` if present. **This proves the *content* is in the
+  source — it does NOT validate the translation.** We never claim otherwise.
+- Without `claim_en`, the claim is marked `cross_lingual_unevaluated` and
+  **excluded** from the FAIL threshold (verdict then rests on citation
+  validity == 1.0 and zero advisory flags).
+
+Real translation-quality checking (fluency, faithfulness, reading level)
+requires bilingual human review or a dedicated MT-quality model. Neither has
+been run in this project.
+
+## 5. Limitations — what this harness cannot do
+
+1. **Paraphrase evades advisory detection.** Both the summarizer's ban and
+   the eval's flags are substring matches against an enumerated pattern list
+   (`advisory.py`, 6 languages, 115 patterns). "You might consider
+   supporting this measure" or any novel phrasing passes silently. This is a
+   keyword backstop, not a demonstrated safety property. The guard has never
+   fired on a real model path because no real model has ever run.
+2. **Keyword grounding cannot check attribution or framing.** During review,
+   a draft claim ("the state estimates Prop. 2 would cost about $18 billion")
+   grounded at 0.44 against the **"ARGUMENT AGAINST Proposition 2"** section —
+   the $18B figure was opponents' rhetoric, not a state estimate. The harness
+   counts such claims as "grounded" because the words overlap; it cannot tell
+   that a claim misattributes its source. This is a fundamental ceiling of
+   keyword-overlap metrics, and the reason every golden claim was also
+   hand-verified by a person against the cited page. (The offending draft was
+   removed, not shipped.)
+3. **Mock vs. real model.** No LLM API key exists in this project. The
+   harness has graded mock English placeholders (whose grounding scored 0.50,
+   exactly on the FAIL boundary) and these hand-written golden claims — never
+   real model output in any language. The demo video must not present a
+   mock-run verdict as proof of real accuracy.
+4. **Grounding thresholds are weak by design.** The per-claim threshold (0.15)
+   and verdict threshold (0.5) are heuristics, not calibrated measurements.
+   A claim can be "grounded" at 0.16 while saying something the source only
+   vaguely supports.
+5. **Retrieval is measured and improved, not solved.** `tests/test_retrieval_golden.py`
+   (9/9 pass on the 1,258-chunk corpus) asserts the right document lands in the top-5
+   for 7 real queries, and `retrieve()` now returns `low_confidence: true` when the top
+   score is below 0.30. A 2026-10-13 fix added a metadata boost: query terms matching a
+   chunk's human-authored section title/filename add up to 0.15 to the cosine score
+   (`METADATA_BOOST_WEIGHT` in `retriever.py`), because embeddings ignore labels like
+   "CONFERENCE WITH LABOR NEGOTIATOR:". Residual weakness: top scores for some council
+   queries are still 0.29–0.40, and ranking among near-duplicate council docs is
+   approximate. Weak matches are *flagged*; the boost helps but ranking is not solved.
+
+## 6. What was NOT tested
+
+- Translation fluency, faithfulness, or the "8th-grade reading level" claim
+  in any non-English language (no real translations exist yet).
+- Retrieval recall on non-English queries.
+- Advisory-language detection on real model output (only on curated claims
+  and synthetic self-test strings).
+- `parser.py`'s two-column recovery and header/footer stripping against
+  ground truth (no parser golden tests exist yet).
+- End-to-end pipeline with a real API key (`demo.py --lang hi` on real
+  translations through `evaluate()`).
+
+## 7. Files
+
+- `eval.py` — harness (self-tests: `python eval.py`)
+- `advisory.py` — single source of truth for advisory patterns (used by
+  `eval.py` and `summarizer.py`)
+- `data/golden/*.json` — 4 curated entries, hand-written and hand-verified
+  2026-10-12 (a duplicate fifth entry was removed during review; the log was
+  regenerated against the final set)
+- `data/golden/eval_log.json` — machine-readable per-claim scores
+- `tests/test_retrieval_golden.py` — retrieval golden tests
+  (`pytest tests/test_retrieval_golden.py`, or plain `python`)
+- `data/SOURCE_MANIFEST.json` — corpus allowlist enforced by
+  `retriever.load_chunks()`

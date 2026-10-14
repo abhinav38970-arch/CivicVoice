@@ -1,0 +1,54 @@
+{
+  "claims": [
+    {
+      "citation": {
+        "page": 4,
+        "source_file": "ca-voter-guide-2024-general.pdf"
+      },
+      "id": "c1",
+      "text": {
+        "en": "The measure authorizes $10 billion in bonds to repair and upgrade K–12 schools and community colleges.",
+        "es": "La medida autoriza 10 mil millones de dólares en bonos para reparar y modernizar las escuelas K-12 y los colegios comunitarios.",
+        "fa": "این طرح اجازه انتشار ۱۰ میلیارد دلار اوراق قرضه برای تعمیر و نوسازی مدارس K-12 و کالج‌های محلی را می‌دهد.",
+        "hi": "यह प्रस्ताव K-12 स्कूलों और सामुदायिक कॉलेजों की मरम्मत और उन्नयन के लिए 10 अरब डॉलर के बॉन्ड को अधिकृत करता है।",
+        "pa": "ਇਹ ਪ੍ਰਸਤਾਵ K-12 ਸਕੂਲਾਂ ਅਤੇ ਕਮਿਊਨਿਟੀ ਕਾਲਜਾਂ ਦੀ ਮੁਰੰਮਤ ਅਤੇ ਅਪਗ੍ਰੇਡ ਲਈ 10 ਅਰਬ ਡਾਲਰ ਦੇ ਬਾਂਡਾਂ ਨੂੰ ਮਨਜ਼ੂਰੀ ਦਿੰਦਾ ਹੈ।",
+        "zh": "该提案授权发行100亿美元债券，用于修缮和升级K-12学校和社区学院。"
+      }
+    },
+    {
+      "citation": {
+        "page": 15,
+        "source_file": "ca-voter-guide-2024-general.pdf"
+      },
+      "id": "c2",
+      "text": {
+        "en": "For some school districts, the state would pay 55% of new construction costs and 65% of renovation costs.",
+        "es": "Para algunos distritos escolares, el estado pagaría el 55% de los costos de construcción nueva y el 65% de los costos de renovación.",
+        "fa": "برای برخی از مناطق آموزشی، دولت ایالتی ۵۵ درصد هزینه ساخت‌وساز جدید و ۶۵ درصد هزینه بازسازی را می‌پردازد.",
+        "hi": "कुछ स्कूल जिलों के लिए, राज्य नए निर्माण की लागत का 55% और नवीनीकरण की लागत का 65% देगा।",
+        "pa": "ਕੁਝ ਸਕੂਲ ਜ਼ਿਲ੍ਹਿਆਂ ਲਈ, ਰਾਜ ਨਵੇਂ ਨਿਰਮਾਣ ਦੀ ਲਾਗਤ ਦਾ 55% ਅਤੇ ਮੁਰੰਮਤ ਦੀ ਲਾਗਤ ਦਾ 65% ਦੇਵੇਗਾ।",
+        "zh": "对于一些学区，州政府将承担新建工程55%的费用和翻修工程65%的费用。"
+      }
+    },
+    {
+      "citation": {
+        "page": 15,
+        "source_file": "ca-voter-guide-2024-general.pdf"
+      },
+      "id": "c3",
+      "text": {
+        "en": "Repaying the bond would cost about $500 million a year for 35 years.",
+        "es": "Pagar el bono costaría unos 500 millones de dólares al año durante 35 años.",
+        "fa": "بازپرداخت این اوراق قرضه سالانه حدود ۵۰۰ میلیون دلار به مدت ۳۵ سال هزینه خواهد داشت.",
+        "hi": "बॉन्ड का भुगतान 35 वर्षों तक हर साल लगभग 500 मिलियन डॉलर का होगा।",
+        "pa": "ਬਾਂਡ ਦੀ ਅਦਾਇਗੀ ਵਿੱਚ 35 ਸਾਲਾਂ ਤੱਕ ਹਰ ਸਾਲ ਲਗਭਗ 500 ਮਿਲੀਅਨ ਡਾਲਰ ਖਰਚ ਹੋਣਗੇ।",
+        "zh": "偿还这笔债券每年将花费约5亿美元，持续35年。"
+      }
+    }
+  ],
+  "id": "prop2-school-bonds",
+  "note": "curated featured example, hand-verified 2026-10-12; not live model output",
+  "query": "ballot measure school funding",
+  "topic": "Proposition 2 school facilities bond measure",
+  "card_title": "🗳️ What's on the ballot?"
+}

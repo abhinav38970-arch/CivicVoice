@@ -1,0 +1,6 @@
+Summarize what the sources say about this topic: {topic}
+
+Write the summary in {language_name}. Follow the system instructions exactly: every claim needs a citation, descriptive only, strict JSON output. If the sources argue both sides, cover both.
+
+SOURCES (use ONLY these; cite their exact source_file and page):
+{sources}

@@ -1,0 +1,32 @@
+# FINAL COLD JUDGING — Technical (CS professor lens)
+
+**Project:** CivicVoice — plain-language summaries of public civic documents for CA-14 (Fremont, CA) in 6 languages, every claim cited to source file + page, plus an eval harness.
+**Repo:** ~/workspace/civicvoice/ | **Reviewer stance:** never seen this project before; did not read anything under `judging/`; every claim below verified by running the code, not trusting docs.
+
+## Method
+
+Read: retriever.py, eval.py, advisory.py, app.py, summarizer.py, llm_client.py, gen_eval_log.py, parser.py (skim), README.md, SUBMISSION.md, EVAL_REPORT.md, FIXES.md.
+Ran: `python eval.py` (11/11 pass), `pytest tests/` (3 passed), `tests/test_retrieval_golden.py` (9/9 pass), booted `app.py` and hit `/`, `/api/golden`, `/api/golden/prop1-2026-housing-bond?language=hi`, `/api/eval-summary`, `/api/ask` (POST, mock + empty).
+Adversarial probes: planted a synthetic JSONL fixture (manifest guard rejected it, loud warning, 1,258 legit chunks kept); spot-checked 15/15 golden citations against parsed chunk text (all resolve); tested advisory guard with direct + paraphrase + Hindi probes; grepped for leaked keys (none); tested retrieval on the newly added everyday-life content (rent rules 0.806, CalFresh 0.570, emergency prep 0.935 — all hitting the right documents); tested Hindi free-form query (fails: 0.149 on irrelevant doc vs English 0.609 on right doc).
+
+## Scores
+
+**(a) Quality of the idea — 7/10.** Real, specific, well-scoped CA-14 problem: Fremont is heavily non-English-speaking at home and civic documents are English-only. The differentiator over the "AI summarizer" archetype is the verifiability loop as the product: every claim cited to (file, page), citations clickable to exact source text, an eval harness scoring citation validity/grounding/advisory-language, and an honesty architecture that refuses to fabricate summaries without a key. The corpus expansion into everyday-life content (rent rules, emergency guides, CalFresh/CalWORKs/Medi-Cal) sharpens the problem fit — these are the documents residents actually need. Docked because RAG-with-citations is a known pattern; the contribution is discipline around it, not an invention.
+
+**(b) Implementation — 7/10.** The app boots clean, serves 5 featured cards with real non-English script (verified Hindi Devanagari live, 3/3 claims), citation drill-down returns exact source text, the eval verdict is visible on screen from the real log ("90/90 claims grounded, 0 advisory flags → PASS", labeled as hand-verified examples), error paths return clean JSON (400/404), mock mode is honest ("Live summaries need an LLM key — here are the sources we found"). The simplified plain civic-service UI matches the product story. Docked because the core interactive promise — "ask anything, get a cited summary" — cannot be demonstrated without an LLM key the project doesn't have; as a demo it is coherent and persuasive, as a general tool it is a curated prototype.
+
+**(c) Demonstrated excellence of coding — 8/10.** This survives expert reading. Highlights verified empirically: SHA-256 manifest guard in `load_chunks()` rejects unlisted/modified files (my planted fixture was skipped with a loud warning); parser.py does real two-column reading-order recovery and header/footer stripping; eval.py is genuinely unicode-aware (Devanagari/Gurmukhi/Han/Perso-Arabic tokenization, CJK bigram fallback) with an explicitly documented cross-lingual policy that refuses to over-claim; the +0.15 metadata boost is a bounded, documented hybrid fix for a real failure mode; error handling is defensive (human-readable messages, never raw tracebacks); requirements pinned; every test suite green. Docked because the load-bearing path — real LLM output through summarize→evaluate — has zero test coverage, and advisory detection is naive substring matching.
+
+## Verified findings (ranked by lethality)
+
+1. **The live LLM path has never run — untested by design (no key).** The central retrieve→summarize→evaluate loop is unproven end to end; MockLLM emits placeholders, the golden set is hand-written. Citation validity, advisory detection, and English grounding are real mechanics proven on their own terms, but no actual model output has ever passed through. Honestly disclosed in EVAL_REPORT.md and on screen ("not live model output"). One real-key run before submission would close most of this.
+2. **Free-form retrieval is English-only.** Hindi "स्कूल बॉन्ड" scored 0.149 on an irrelevant Newark doc while the English equivalent scored 0.609 on the right voter guide. all-MiniLM-L6-v2 doesn't do non-Latin queries. Disclosed in README and the UI ("ask in English, then read the summary in your language") — honest, but it caps the multilingual promise at the featured cards.
+3. **Non-English grounding uses an English shadow (`claim_en`).** Keyword overlap proves the *content* exists in the English source, not that the translation is faithful. Disclosed in eval.py's policy header and the log's method string. No bilingual review, no translation-quality metric.
+4. **Advisory detection is substring matching; paraphrases evade it.** "You might consider supporting this measure" walks through silently; the Hindi spot list misses simple direct phrasings ("प्रस्ताव 1 के लिए हाँ वोट करें" unflagged). Keyword backstop, not a safety property — disclosed in advisory.py's coverage-honesty header.
+5. **Retrieval ranking is approximate.** Golden tests assert top-5, not rank-1; typical top scores 0.5–0.7; the metadata boost is principled but simple. Adequate for the demo; not a retrieval contribution.
+
+**Not flaws (checked, held up):** manifest guard works; 15/15 citations resolve to real supporting chunks; no API keys in repo; `/api/chunk` traversal-proof (404); mock mode never fabricates summaries; featured examples labeled hand-verified on screen; new corpus content (rent/emergency/benefits) retrieves strongly on the right documents.
+
+## Verdict: YES
+
+Clears the CA-14 bar on technical merit. The skeptic's brief was "engineering or prompt-chain wrapper" — the answer is engineering: a real retrieval pipeline with an integrity guard, a real (if bounded) eval harness, and defensive, well-tested code throughout. Every significant gap is a disclosed limitation, not a hidden failure. The single highest-value step before submission is one real-key run through summarize→evaluate, logged — environmental, not architectural.

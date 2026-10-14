@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+*.log
+demo/*.mp4
+
+# Raw source PDFs (240MB) — the parsed JSONL in data/parsed/ is the committed
+# artifact; re-parse locally with parser.py if needed.
+data/raw/
+
+# Rebuilt embedding index (regenerates automatically on first run)
+data/index/
+
+# Vendored embedding model (90MB) — auto-downloaded on first run
+models/

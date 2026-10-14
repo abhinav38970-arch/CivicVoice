@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CivicVoice — Plain-language summaries of civic documents</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page">
+
+  <header class="topbar">
+    <div class="brand">CivicVoice</div>
+    <span class="district-pill">CA-14</span>
+  </header>
+
+  <section class="hero">
+    <h1>Your city council and ballot, explained in your language.</h1>
+    <p class="hero-sub">Plain-language summaries of Fremont council documents and California ballot measures — in English, हिन्दी, ਪੰਜਾਬੀ, 中文, Español, and فارسی. Every claim links to its exact source.</p>
+  </section>
+
+  <main>
+    <!-- 1. Language picker FIRST; choice persists in localStorage -->
+    <section class="card" aria-labelledby="langHeading">
+      <h2 id="langHeading" class="section-h">Choose your language</h2>
+      <p class="section-sub">Everything below appears in the language you pick.</p>
+      <div id="langGrid" class="lang-grid" role="group" aria-label="Language">
+        {% for l in languages %}
+        <button type="button" class="lang-btn" data-lang="{{ l.code }}"
+                aria-pressed="false" title="{{ l.name }}">
+          <span class="lang-native">{{ l.native }}</span>
+          <span class="lang-name">{{ l.name }}</span>
+        </button>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- 2. One-click curated cards -->
+    <section class="card" aria-labelledby="cardsHeading">
+      <h2 id="cardsHeading" class="section-h">Try a real example</h2>
+      <p class="section-sub">Each summary is hand-written and hand-verified against the source documents.</p>
+      <div id="cards" class="cards" aria-live="polite">
+        <div class="card-skel"></div><div class="card-skel"></div>
+        <div class="card-skel"></div><div class="card-skel"></div>
+      </div>
+    </section>
+
+    <!-- 3. Free-text, demoted -->
+    <section class="card" aria-labelledby="askHeading">
+      <h2 id="askHeading" class="section-h">Ask your own question</h2>
+      <p class="section-sub">Search the council documents and voter guides — ask in English, then read the summary in your language.</p>
+      <div class="ask-row">
+        <input id="query" type="text" placeholder="e.g. What is the council's plan for labor negotiations?"
+               autocomplete="off" aria-label="Your question">
+        <button id="askBtn" type="button"><span class="btn-label">Ask</span></button>
+      </div>
+      <p id="status" class="status" aria-live="polite"></p>
+    </section>
+
+    <!-- 4. Results -->
+    <section id="results" class="results" hidden aria-live="polite">
+      <div class="card">
+        <div class="result-head">
+          <h2 id="resTitle">Answer <span id="resLang" class="lang-tag"></span></h2>
+          <span id="featuredBadge" class="featured-badge" hidden>Featured example — hand-verified</span>
+        </div>
+        <div id="resultLoading" class="result-loading" hidden>
+          <div class="spinner" role="status" aria-label="Loading"></div>
+          <p id="resultLoadingText">Searching council documents and voter guides…</p>
+        </div>
+        <p id="honestNote" class="honest-note" hidden></p>
+        <ol id="claims" class="claims"></ol>
+        <div id="sourcesBlock"></div>
+      </div>
+    </section>
+
+    <!-- 5. Verification panel, in human language -->
+    <section class="card trust-card" aria-labelledby="trustHeading">
+      <h2 id="trustHeading" class="section-h">How we check our work</h2>
+      <ul class="trust-list">
+        <li><strong>Every sentence is traced to its source.</strong> Tap any citation to see the exact page it came from.</li>
+        <li><strong>The app describes documents — it never tells you how to vote.</strong> Anything that reads like voting advice is blocked before it reaches you.</li>
+        <li><strong>If we can't find strong sources, we say so</strong> — instead of dressing up a weak answer.</li>
+      </ul>
+      <p class="muted" id="evalSummaryLine">Checking our featured examples…</p>
+      <details class="tech-details">
+        <summary>For the technically curious</summary>
+        <p class="muted">For live summaries we run an automated check on every answer:
+        <span class="mono">citation_validity</span> (do all citations point at real chunks?),
+        <span class="mono">grounding_score</span> (do the words appear in the cited text?),
+        and an advisory-language scan. Raw numbers appear here when you ask your own question with a live model.</p>
+        <div id="techMetrics" class="metrics" hidden>
+          <div><dt>Citation validity</dt><dd id="mValidity">—</dd></div>
+          <div><dt>Grounding score</dt><dd id="mGrounding">—</dd></div>
+          <div><dt>Advisory flags</dt><dd id="mFlags">—</dd></div>
+          <div><dt>Verdict</dt><dd id="mVerdict">—</dd></div>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    <p>Sources: CA Voter Information Guides &amp; City of Fremont public council documents.
+    Descriptive summaries only — never voting advice.</p>
+    {% if mock_mode %}
+    <p class="foot-note">Demo build — featured examples are hand-verified; live summaries need an LLM key.</p>
+    {% endif %}
+  </footer>
+</div>
+
+<!-- Citation side panel: the exact source chunk behind a claim -->
+<div id="drawerScrim" class="scrim" hidden></div>
+<aside id="drawer" class="drawer" hidden aria-label="Source document">
+  <div class="drawer-head">
+    <h2>Verify this claim</h2>
+    <button id="drawerClose" type="button" aria-label="Close">✕</button>
+  </div>
+  <p class="drawer-why">The exact source text the claim above is based on — check it yourself.</p>
+  <dl class="drawer-meta">
+    <div><dt>File</dt><dd id="dFile" class="mono">—</dd></div>
+    <div><dt>Page</dt><dd id="dPage">—</dd></div>
+    <div><dt>Section</dt><dd id="dSection">—</dd></div>
+  </dl>
+  <p class="drawer-text-label">Source text</p>
+  <p id="dText" class="drawer-text"></p>
+</aside>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const LANG_KEY = "civicvoice_lang";
+
+function currentLang() {
+  return localStorage.getItem(LANG_KEY) || "en";
+}
+
+function setLang(code, save) {
+  if (save) localStorage.setItem(LANG_KEY, code);
+  document.querySelectorAll(".lang-btn").forEach((b) => {
+    const on = b.dataset.lang === code;
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
+
+function nativeName(code) {
+  const el = document.querySelector('.lang-btn[data-lang="' + code + '"] .lang-native');
+  return el ? el.textContent : code;
+}
+
+// ---------- language picker (persisted) ----------
+document.querySelectorAll(".lang-btn").forEach((b) => {
+  b.addEventListener("click", () => setLang(b.dataset.lang, true));
+});
+setLang(currentLang(), false);
+
+// ---------- citation side panel ----------
+function pageForFetch(page) {
+  // citation pages may be [start, end] lists in golden data
+  if (Array.isArray(page)) return page[0];
+  return page;
+}
+function pageLabel(page) {
+  if (Array.isArray(page)) return page.length > 1 ? page[0] + "–" + page[1] : String(page[0]);
+  return String(page);
+}
+async function openChunk(file, page) {
+  $("drawer").hidden = false;
+  $("drawerScrim").hidden = false;
+  $("dFile").textContent = file;
+  $("dPage").textContent = pageLabel(page);
+  $("dSection").textContent = "loading…";
+  $("dText").textContent = "Loading source text…";
+  try {
+    const res = await fetch("/api/chunk?file=" + encodeURIComponent(file) +
+                            "&page=" + encodeURIComponent(pageForFetch(page)));
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "could not load source");
+    $("dSection").textContent = data.section_title || "—";
+    $("dText").textContent = data.text;
+    $("dPage").textContent = pageLabel(data.page);
+  } catch (e) {
+    $("dSection").textContent = "—";
+    $("dText").textContent = "Error: " + e.message;
+  }
+  document.body.classList.add("drawer-open");
+}
+function closeDrawer() {
+  $("drawer").hidden = true;
+  $("drawerScrim").hidden = true;
+  document.body.classList.remove("drawer-open");
+}
+$("drawerClose").addEventListener("click", closeDrawer);
+$("drawerScrim").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+
+function citationEl(citation) {
+  const cite = document.createElement("button");
+  cite.type = "button";
+  cite.className = "citation";
+  cite.textContent = citation.source_file + " · page " + pageLabel(citation.page);
+  cite.addEventListener("click", () => openChunk(citation.source_file, citation.page));
+  return cite;
+}
+
+// Show the results card with a loading indicator while a request is in flight.
+function showLoading(title, langCode, message) {
+  $("resTitle").firstChild.textContent = title + " ";
+  $("resLang").textContent = nativeName(langCode);
+  $("featuredBadge").hidden = true;
+  $("honestNote").hidden = true;
+  $("claims").innerHTML = "";
+  $("sourcesBlock").innerHTML = "";
+  $("techMetrics").hidden = true;
+  $("resultLoadingText").textContent = message;
+  $("resultLoading").hidden = false;
+  $("results").hidden = false;
+  $("results").scrollIntoView({behavior: "smooth", block: "start"});
+}
+function hideLoading() {
+  $("resultLoading").hidden = true;
+}
+
+function renderResult({title, langLabel, featured, honestNote, claims, sources}) {
+  hideLoading();
+  $("resTitle").firstChild.textContent = title + " ";
+  $("resLang").textContent = langLabel;
+  $("featuredBadge").hidden = !featured;
+
+  const note = $("honestNote");
+  if (honestNote) {
+    note.textContent = honestNote;
+    note.hidden = false;
+  } else {
+    note.hidden = true;
+  }
+
+  const claimsEl = $("claims");
+  claimsEl.innerHTML = "";
+  for (const item of claims) {
+    const li = document.createElement("li");
+    const p = document.createElement("p");
+    p.className = "claim";
+    p.textContent = item.claim || item.text;
+    li.appendChild(p);
+    if (item.missingTranslation) {
+      const flag = document.createElement("span");
+      flag.className = "trans-note";
+      flag.textContent = "(translation not yet available — showing English)";
+      li.appendChild(flag);
+    }
+    if (item.citation) li.appendChild(citationEl(item.citation));
+    claimsEl.appendChild(li);
+  }
+
+  const sb = $("sourcesBlock");
+  sb.innerHTML = "";
+  if (sources && sources.length) {
+    const h = document.createElement("h3");
+    h.className = "sources-h";
+    h.textContent = "Sources we found";
+    sb.appendChild(h);
+    for (const s of sources) {
+      const div = document.createElement("div");
+      div.className = "source-item";
+      const t = document.createElement("p");
+      t.className = "source-text";
+      t.textContent = s.text.length > 400 ? s.text.slice(0, 400) + "…" : s.text;
+      div.appendChild(t);
+      div.appendChild(citationEl(s));
+      sb.appendChild(div);
+    }
+  }
+
+  $("techMetrics").hidden = true;
+  $("results").hidden = false;
+  $("results").scrollIntoView({behavior: "smooth", block: "start"});
+}
+
+// ---------- featured cards: real inviting cards ----------
+async function loadEvalSummary() {
+  const line = $("evalSummaryLine");
+  try {
+    const res = await fetch("/api/eval-summary");
+    if (!res.ok) throw new Error("unavailable");
+    const s = await res.json();
+    const langs = (s.languages || []).length;
+    line.innerHTML = "";
+    const strong = document.createElement("strong");
+    strong.textContent = `Featured examples check: ${s.grounded}/${s.total_claims} claims grounded, ${s.advisory_flags} advisory flags → ${s.verdict}`;
+    line.appendChild(strong);
+    line.appendChild(document.createTextNode(
+      ` — run ${s.generated || "recently"} over ${s.entries} hand-verified examples in ${langs} languages. Hand-verified examples, not live model output.`));
+  } catch (e) {
+    line.textContent = "Featured-example evaluation results unavailable.";
+  }
+}
+async function loadCards() {
+  try {
+    const res = await fetch("/api/golden");
+    const cards = await res.json();
+    const wrap = $("cards");
+    wrap.innerHTML = "";
+    if (!cards.length) {
+      wrap.innerHTML = '<p class="muted">No featured examples yet.</p>';
+      return;
+    }
+    for (const c of cards) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "topic-card";
+      const t = document.createElement("span");
+      t.className = "topic-card-title";
+      t.textContent = c.title;
+      b.appendChild(t);
+      if (c.topic) {
+        const d = document.createElement("span");
+        d.className = "topic-card-desc";
+        d.textContent = c.topic;
+        b.appendChild(d);
+      }
+      const chip = document.createElement("span");
+      chip.className = "topic-card-chip";
+      chip.textContent = "hand-verified";
+      b.appendChild(chip);
+      b.addEventListener("click", () => loadFeatured(c.id));
+      wrap.appendChild(b);
+    }
+  } catch (e) {
+    $("cards").innerHTML = '<p class="muted">Could not load examples.</p>';
+  }
+}
+
+async function loadFeatured(id) {
+  const lang = currentLang();
+  showLoading("Featured example", lang, "Loading the verified example…");
+  $("status").textContent = "";
+  try {
+    const res = await fetch("/api/golden/" + encodeURIComponent(id) +
+                            "?language=" + encodeURIComponent(lang));
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "request failed");
+    renderResult({
+      title: data.title,
+      langLabel: nativeName(lang),
+      featured: true,
+      honestNote: null,
+      claims: data.claims.map((c) => ({
+        text: c.text,
+        citation: c.citation,
+        missingTranslation: !c.language_available && lang !== "en",
+      })),
+      sources: null,
+    });
+  } catch (e) {
+    hideLoading();
+    $("honestNote").textContent = "Error: " + e.message;
+    $("honestNote").hidden = false;
+  }
+}
+
+// ---------- free-text question ----------
+async function ask() {
+  const query = $("query").value.trim();
+  const lang = currentLang();
+  if (!query) { $("status").textContent = "Type a question first."; return; }
+
+  $("askBtn").disabled = true;
+  $("askBtn").classList.add("loading");
+  $("status").textContent = "";
+  showLoading("Your question", lang, "Searching council documents and voter guides…");
+
+  try {
+    const res = await fetch("/api/ask", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({query, language: lang, k: 5}),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "request failed");
+
+    if (data.mode === "mock_sources") {
+      // Honesty architecture: no fabricated summary in demo mode.
+      renderResult({
+        title: "Your question",
+        langLabel: nativeName(lang),
+        featured: false,
+        honestNote: data.message,
+        claims: [],
+        sources: data.sources,
+      });
+    } else {
+      renderResult({
+        title: "Your question",
+        langLabel: nativeName(data.language),
+        featured: false,
+        honestNote: data.note || null,
+        claims: data.summary,
+        sources: null,
+      });
+      const ev = data.eval;
+      $("mValidity").textContent = Number(ev.citation_validity).toFixed(2);
+      $("mGrounding").textContent = Number(ev.grounding_score).toFixed(2);
+      $("mFlags").textContent = ev.advisory_flags.length ? ev.advisory_flags.join("; ") : "none";
+      $("mVerdict").textContent = ev.verdict;
+      $("techMetrics").hidden = false;
+    }
+  } catch (e) {
+    hideLoading();
+    $("honestNote").textContent = "Error: " + e.message;
+    $("honestNote").hidden = false;
+  } finally {
+    $("askBtn").disabled = false;
+    $("askBtn").classList.remove("loading");
+  }
+}
+
+$("askBtn").addEventListener("click", ask);
+$("query").addEventListener("keydown", (e) => { if (e.key === "Enter") ask(); });
+
+loadCards();
+loadEvalSummary();
+</script>
+</body>
+</html>

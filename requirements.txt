@@ -1,0 +1,13 @@
+# CivicVoice pinned dependencies (from .venv, 2026-10-12).
+Flask==3.1.3
+sentence-transformers==6.1.0
+numpy==2.5.4
+httpx==0.28.1
+pymupdf==1.28.2
+pdfplumber==0.11.10
+requests==2.34.2
+# Test-only:
+pytest==9.1.1
+# NOTE: `openai` is intentionally absent — llm_client.py's three-transport
+# fallback (openai -> httpx -> urllib) works without it, and the venv does
+# not have it installed. Install openai only if you want the first transport.

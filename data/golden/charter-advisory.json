@@ -1,0 +1,54 @@
+{
+  "claims": [
+    {
+      "citation": {
+        "page": 3,
+        "source_file": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf"
+      },
+      "id": "c1",
+      "text": {
+        "en": "The Charter Advisory Committee asked residents to share preliminary opinions to help find consensus on key questions.",
+        "es": "El Comité Asesor de la Carta pidió a los residentes que compartieran opiniones preliminares para ayudar a lograr consenso sobre preguntas clave.",
+        "fa": "کمیته مشورتی منشور از ساکنان خواست نظرات اولیه خود را به اشتراک بگذارند تا به اجماع درباره پرسش‌های کلیدی کمک شود.",
+        "hi": "चार्टर सलाहकार समिति ने निवासियों से मुख्य प्रश्नों पर आम सहमति बनाने में मदद के लिए प्रारंभिक राय साझा करने को कहा।",
+        "pa": "ਚਾਰਟਰ ਸਲਾਹਕਾਰ ਕਮੇਟੀ ਨੇ ਨਿਵਾਸੀਆਂ ਨੂੰ ਮੁੱਖ ਸਵਾਲਾਂ 'ਤੇ ਸਹਿਮਤੀ ਬਣਾਉਣ ਵਿੱਚ ਮਦਦ ਲਈ ਸ਼ੁਰੂਆਤੀ ਰਾਏ ਸਾਂਝੀ ਕਰਨ ਲਈ ਕਿਹਾ।",
+        "zh": "宪章咨询委员会请居民分享初步意见，以帮助就关键问题达成共识。"
+      }
+    },
+    {
+      "citation": {
+        "page": 0,
+        "source_file": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf"
+      },
+      "id": "c2",
+      "text": {
+        "en": "The committee's special meeting was set for April 6, 2026, from 5:00 to 7:00 p.m. in the Council Chambers.",
+        "es": "La reunión especial del comité se programó para el 6 de abril de 2026, de 5:00 a 7:00 p.m., en la Cámara del Concejo.",
+        "fa": "جلسه ویژه کمیته برای ۶ آوریل ۲۰۲۶، از ساعت ۵:۰۰ تا ۷:۰۰ عصر در تالار شورا تعیین شده بود.",
+        "hi": "समिति की विशेष बैठक 6 अप्रैल, 2026 को शाम 5:00 से 7:00 बजे तक काउंसिल चैंबर्स में तय की गई थी।",
+        "pa": "ਕਮੇਟੀ ਦੀ ਵਿਸ਼ੇਸ਼ ਮੀਟਿੰਗ 6 ਅਪ੍ਰੈਲ, 2026 ਨੂੰ ਸ਼ਾਮ 5:00 ਤੋਂ 7:00 ਵਜੇ ਤੱਕ ਕੌਂਸਲ ਚੈਂਬਰਜ਼ ਵਿੱਚ ਤੈਅ ਕੀਤੀ ਗਈ ਸੀ।",
+        "zh": "委员会的特别会议定于2026年4月6日下午5:00至7:00在议会厅举行。"
+      }
+    },
+    {
+      "citation": {
+        "page": 0,
+        "source_file": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf"
+      },
+      "id": "c3",
+      "text": {
+        "en": "Residents could join Charter Advisory Committee meetings in person or remotely.",
+        "es": "Los residentes podían asistir a las reuniones del Comité Asesor de la Carta en persona o de forma remota.",
+        "fa": "ساکنان می‌توانستند به صورت حضوری یا از راه دور در جلسات کمیته مشورتی منشور شرکت کنند.",
+        "hi": "निवासी चार्टर सलाहकार समिति की बैठकों में व्यक्तिगत रूप से या दूरस्थ रूप से शामिल हो सकते थे।",
+        "pa": "ਨਿਵਾਸੀ ਚਾਰਟਰ ਸਲਾਹਕਾਰ ਕਮੇਟੀ ਦੀਆਂ ਮੀਟਿੰਗਾਂ ਵਿੱਚ ਵਿਅਕਤੀਗਤ ਤੌਰ 'ਤੇ ਜਾਂ ਦੂਰੋਂ ਸ਼ਾਮਲ ਹੋ ਸਕਦੇ ਸਨ।",
+        "zh": "居民可以亲自或远程参加宪章咨询委员会的会议。"
+      }
+    }
+  ],
+  "id": "charter-advisory",
+  "note": "curated featured example, hand-verified 2026-10-12; not live model output",
+  "query": "charter advisory committee government form questionnaire",
+  "topic": "Charter Advisory Committee: form-of-government questions",
+  "card_title": "📋 Charter committee Q&A"
+}

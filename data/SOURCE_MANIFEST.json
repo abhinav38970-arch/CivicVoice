@@ -1,0 +1,269 @@
+{
+ "generated": "2026-10-13",
+ "note": "Allowlist for the retrieval corpus. retriever.load_chunks() skips (with a loud warning) any data/parsed/*.jsonl file that is not listed here, or whose sha256 does not match. This is the permanent guard against synthetic/test fixtures (e.g. the lorem-ipsum 'fremont-council-2026-07-11-agenda' fixture, quarantined 2026-10-12) leaking into the live index.",
+ "sources": [
+  {
+   "description": "Fremont City Council special meeting notice: Mar 4, 2025 closed session — labor negotiations (city employee orgs).",
+   "filename": "20250304_REVISED_Closed_Session_Notice_Labor_Negotiations.jsonl",
+   "sha256": "eb9397f58606a20c15ca9e8ede19860009d7ae5dc5ab8b83b9ecd06a5977111b"
+  },
+  {
+   "description": "Fremont City Council special meeting minutes: Mar 18, 2025 closed session — labor negotiator.",
+   "filename": "20250318_CC_Minutes__CLOSED_SESSION.jsonl",
+   "sha256": "4b9105a5d5d24a6494fa7da1e594dd025553ca228521e2f5425920b7330486cb"
+  },
+  {
+   "description": "Fremont City Council special meeting notice: Jun 17, 2025 closed session — labor negotiations.",
+   "filename": "20250617_Closed_Session_Notice_Labor_Negotiations.jsonl",
+   "sha256": "e71c5fa1836ed470af579a6f54126b7cee05b809499fdfd176e5498ecd91d5d0"
+  },
+  {
+   "description": "FUSD–City liaison committee meeting agenda (rev 2), Sep 22, 2025.",
+   "filename": "20250922_COFFUSD_Liaison_Committee_Meeting_Agenda_rev2.jsonl",
+   "sha256": "3e1ab9cb8b49f29481f35ae1f5eb684a2d91ae5b98584c195a29f3f32253fd66"
+  },
+  {
+   "description": "City of Fremont 2025 Mid-Year City Council Priority Progress Report (economic development, public safety, sustainability, homelessness).",
+   "filename": "2025_MidYear_Progress_Report.jsonl",
+   "sha256": "b6b3fc92c85ef675922f9843d40f37bfd95b034941ce24502c1bafdd85d20e03"
+  },
+  {
+   "description": "Charter Advisory Committee meeting agenda packet, Apr 6, 2026 (public participation notice, committee Q&A).",
+   "filename": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.jsonl",
+   "sha256": "4ba56ae88920a1e526c2af0f1d0880e5cdf57c17160e01ee2aa6c0665602a925"
+  },
+  {
+   "description": "Special meeting notice: State of the City (SOTC), Jun 30, 2026.",
+   "filename": "20260630_SOTC_Special_Meeting_Notice.jsonl",
+   "sha256": "383ef6d0e6fd83484b064663f32c9ce48a37e0d7c2cfa67c731a8bce802fd1e5"
+  },
+  {
+   "description": "California Official Voter Information Guide, 2022 General Election (statewide measures + candidate statements).",
+   "filename": "ca-voter-guide-2022-general.jsonl",
+   "sha256": "495f80017efad6fe731747d9c6a0ce685e9907e71d6f0da2cd7ea5d9053bd43d"
+  },
+  {
+   "description": "California Official Voter Information Guide, 2024 General Election (statewide measures incl. Proposition 2 school bonds).",
+   "filename": "ca-voter-guide-2024-general.jsonl",
+   "sha256": "644b1e3b9f1ac29e9fc40393d1091659944bcd09727692d914c1ba3ae8e96eca"
+  },
+  {
+   "filename": "ca-voter-guide-2026-general.jsonl",
+   "sha256": "7e1b4f5c7e51931011352477dacd7b4c5ec9f8f5b00714cb21ee058a476f3348",
+   "description": "California Official Voter Information Guide, 2026 General Election (Nov 3, 2026 — current election; statewide measures + candidate statements)."
+  },
+  {
+   "filename": "ca-voter-guide-2026-primary.jsonl",
+   "sha256": "11a2f51aebc97a5ab01ec0ac007dc5940df5de4d2a8a8200c2c8c7476419d5f4",
+   "description": "California Official Voter Information Guide, 2026 Primary Election (Jun 2, 2026)."
+  },
+  {
+   "filename": "ca-voter-guide-2020-general.jsonl",
+   "sha256": "9560fbee29b0fbdc284c348af29f7bb2383cb6715032d1c4791979ee4bf1e9fa",
+   "description": "California Official Voter Information Guide, 2020 General Election (statewide measures + candidate statements)."
+  },
+  {
+   "filename": "alameda-bos-2026-01-13-agenda.jsonl",
+   "sha256": "0863ec2fcb85758494f55a5b69f57cf633e76671adfad7779d8cdb682a1b3431",
+   "description": "Alameda County Board of Supervisors regular meeting agenda, Jan 13, 2026 (incl. addendum)."
+  },
+  {
+   "filename": "alameda-bos-2026-01-27-agenda.jsonl",
+   "sha256": "39f60e256b2f8bd80d807f09b4f0ef2fdf1a8ebad0332f0cc4150d17148d05b4",
+   "description": "Alameda County Board of Supervisors regular meeting agenda, Jan 27, 2026."
+  },
+  {
+   "filename": "alameda-bos-2026-02-10-planning-agenda.jsonl",
+   "sha256": "74b72523ae22c58af24c61e24fd4c163a74b3d448c7b91db2dcff37018213baa",
+   "description": "Alameda County Board of Supervisors special planning meeting agenda, Feb 10, 2026."
+  },
+  {
+   "filename": "alameda-bos-2026-03-05-agenda.jsonl",
+   "sha256": "77f9efdf1869696b97940f59aff4f5ba62e9dec7b5a53da03b20a9c7f89f029a",
+   "description": "Alameda County Board of Supervisors planning meeting agenda, Mar 5, 2026."
+  },
+  {
+   "filename": "alameda-bos-2026-04-07-agenda.jsonl",
+   "sha256": "9f951af139ab9618be76ccbf0e039d8e21142fc9f241a6ea7f17a08d2eee31cb",
+   "description": "Alameda County Board of Supervisors regular meeting agenda, Apr 7, 2026 (incl. addendum)."
+  },
+  {
+   "filename": "alameda-bos-2026-06-16-agenda.jsonl",
+   "sha256": "e56293ef917f0938328c5435969e5d7bfe898adde335e127c2baf6f024672393",
+   "description": "Alameda County Board of Supervisors regular meeting agenda, Jun 16, 2026."
+  },
+  {
+   "filename": "union-city-council-2025-09-09-special-agenda.jsonl",
+   "sha256": "8887f8f5a3ab636d7dfd598520c1546db019cd6da400115a2de18d95b45996a2",
+   "description": "Union City City Council special meeting agenda, Sep 9, 2025."
+  },
+  {
+   "filename": "union-city-bart-mural-project-staff-report.jsonl",
+   "sha256": "598ab138cf34baebd45274eac7395f517d2641119a6c2d420c8421a0f5ad98da",
+   "description": "Union City staff report: BART Mural Project phases I–V (through Mar 2027)."
+  },
+  {
+   "filename": "union-city-council-2026-meeting-schedule-resolution.jsonl",
+   "sha256": "b834cc4c62371a91f5b16da9157c6fd2a40e0c480d137d276208623431e2b9e1",
+   "description": "Union City resolution setting the 2026 City Council meeting schedule."
+  },
+  {
+   "filename": "union-city-council-2026-07-28-item-4-3-staff-report.jsonl",
+   "sha256": "09ba65a7895f91f880b138bc38837d0c96bab6f1587716f090c577038b12b30e",
+   "description": "Union City Council agenda item 4.3 staff report, Jul 28, 2026 (August recess schedule)."
+  },
+  {
+   "filename": "union-city-senior-commission-2026-03-17-minutes.jsonl",
+   "sha256": "ae4cd2c0afeb646b5dfbd922578aed5bc3fdff80dc4c428b71214c172b669630",
+   "description": "Union City Senior Citizens Commission meeting minutes, Mar 17, 2026."
+  },
+  {
+   "filename": "union-city-it-strategic-roadmap-2026-update.jsonl",
+   "sha256": "1244df27541747b9920aebd4630e401b5b8d5df1db214475a70d0241388d09d8",
+   "description": "Union City IT Strategic Roadmap 2022–2027 year-4 update, Jul 14, 2026 (1 of 11 pages scanned-only)."
+  },
+  {
+   "filename": "fremont-cdbg-2026-07-31-public-notice.jsonl",
+   "sha256": "c9d12a4fc81c33a1877b1612bde0506d64cfdd3a765fa1569a9c798cde8b8867",
+   "description": "fremont cdbg 2026 07 31 public notice",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "fremont-cdbg-2026-27-annual-action-plan.jsonl",
+   "sha256": "43480c3a8082885d7c2fe183e158168663e4e4f3a94926e577b70c3f731d7054",
+   "description": "fremont cdbg 2026 27 annual action plan",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "fremont-charter-committee-2026-03-23-minutes.jsonl",
+   "sha256": "36c16d8f7a49714a55c33f9015cac7737ffe68fc7ea9207fba6a24817934f5b2",
+   "description": "fremont charter committee 2026 03 23 minutes",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "fremont-charter-committee-2026-04-16-correspondence.jsonl",
+   "sha256": "0a95ac5a4b13aff8ae2bd5ed8bff24b8f0c0f187bcab9ecb2716eb0cf6c7f670",
+   "description": "fremont charter committee 2026 04 16 correspondence",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "fremont-council-2026-07-07-charter-public-comment.jsonl",
+   "sha256": "01c1901554af72af2f37610d62452807f85cbb11656b8f4fa7402089acd099a1",
+   "description": "fremont council 2026 07 07 charter public comment",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "fremont-council-handbook.jsonl",
+   "sha256": "f01828cc1595a680b0ba4b59800eadf4041a46fabf89ae32fe772c0942a5c2a1",
+   "description": "fremont council handbook",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "fremont-edac-2026-09-10-agenda.jsonl",
+   "sha256": "ee3ce804d58ae803e911fe82dd87449760d387c9a2f713dc34996b505f37b55a",
+   "description": "fremont edac 2026 09 10 agenda",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "fremont-fy2026-27-adopted-budget.jsonl",
+   "sha256": "f96bdcbfacafa2b5d548e396a8ec50981836b643d5acd8366c6797420bd9536b",
+   "description": "fremont fy2026 27 adopted budget",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "fremont-fy2026-27-proposed-budget-presentation.jsonl",
+   "sha256": "961e16ce20b9bb638fc9f6e021024e0c876b2b3ae0dc811da6552ca76ee4b324",
+   "description": "fremont fy2026 27 proposed budget presentation",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "fremont-newsletter-2026-spring.jsonl",
+   "sha256": "917dcb46c60e4a21f20a4395fc56e749e9810416ff03fcc69cccb16b7db3c539",
+   "description": "fremont newsletter 2026 spring",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "fremont-sotc-2026-06-30-address.jsonl",
+   "sha256": "53476e95be6b734964101556300bb35f117c9009a4251dded4f7471af2961292",
+   "description": "fremont sotc 2026 06 30 address",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "newark-council-2026-03-12-minutes.jsonl",
+   "sha256": "b1009997cdeca6fbdaf742508dd35ad7ccee4ca3c13ff6c8de9152e4432b2691",
+   "description": "newark council 2026 03 12 minutes",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "newark-council-2026-03-26-minutes.jsonl",
+   "sha256": "0ea2e9f0cc8386235926e8a1252de3f01b3dc5c4200e9af829f0fb34fbac314c",
+   "description": "newark council 2026 03 26 minutes",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "newark-council-biennial-budget-2026-28.jsonl",
+   "sha256": "47bf98b38633ae61df1ff46a6f2b20f95dfcb34a4c4468bff3a07ff9360c2d93",
+   "description": "newark council biennial budget 2026 28",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "newark-council-recent-agenda.jsonl",
+   "sha256": "da1f4d071409fdb50af24f8f530159f2ad776248dfc045b871cb81442f979d17",
+   "description": "newark council recent agenda",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "newark-master-fee-schedule-hearing-notice.jsonl",
+   "sha256": "7bfa300d69656f048e3f71e390d61cd8d9e84f08423289d11aa78140e01ba751",
+   "description": "newark master fee schedule hearing notice",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "newark-nov-2026-election-notice.jsonl",
+   "sha256": "f5051f4bf263871c2b8050fe44f87d1d1f956d3798fab4937af260eead18840c",
+   "description": "newark nov 2026 election notice",
+   "added": "2026-10-13"
+  },
+  {
+   "filename": "newark-planning-commission-2026-05-26-agenda.jsonl",
+   "sha256": "2dde3c9b91c4c593c66af455a9e900bd929d2e0cab5b99f75af74335c5144407",
+   "description": "newark planning commission 2026 05 26 agenda",
+   "added": "2026-10-13"
+  },
+  {
+   "description": "City of Fremont official site: Rent Review Program + process pages (5% rule, consultation/mediation/hearing, contacts). Extracted 2026-10-13.",
+   "filename": "html-fremont-rent-review.jsonl",
+   "sha256": "d2a675d015ee453960f88861fcee88c2a937b11501df66add224538fc0c72e36"
+  },
+  {
+   "description": "City of Fremont official site: Source of Income Discrimination ordinance page + FAQ (Section 8 protections). Extracted 2026-10-13.",
+   "filename": "html-fremont-source-of-income.jsonl",
+   "sha256": "a889b71091d14745b8650b4317c0c500abdb9e3b9aef6f67cff5e185e24489d6"
+  },
+  {
+   "description": "City of Fremont official site: Emergency Preparedness hub + earthquake + wildfire sub-pages (Hayward Fault area guidance). Extracted 2026-10-13.",
+   "filename": "html-fremont-emergency-preparedness.jsonl",
+   "sha256": "a815f525ad1af0019f03d1065e578e275aaeca2fa0e4fd0eccd14fe2aa7794b8"
+  },
+  {
+   "description": "City of Fremont official site: CERT free disaster-training program (schedule, areas, contact). Extracted 2026-10-13.",
+   "filename": "html-fremont-cert.jsonl",
+   "sha256": "578eab75e278b0998567806fc06192609dc26f3a4c784ad4206d151d7b156759"
+  },
+  {
+   "description": "City of Fremont official press releases, Mar 2025–Aug 2026 (8 releases: CALEA, homelessness count, RTIC, police chief, grid MOU, housing). Extracted 2026-10-13; refresh monthly or it rots.",
+   "filename": "html-fremont-press-releases.jsonl",
+   "sha256": "e3fd0fc761848996b02a70cb1b613636aabc54a08207dc1ffec4626760c3cb89"
+  },
+  {
+   "description": "Alameda County SSA official CalFresh page via archived copy captured 2025-01-21 (live agency site unreachable 2026-10-13; verify before refresh).",
+   "filename": "html-alameda-ssa-calfresh.jsonl",
+   "sha256": "ac18909de06d37b04234ae3b6cca46271f7fa4dcd05079b5078a8e98bd5bf897"
+  },
+  {
+   "description": "CalWORKs/Medi-Cal program descriptions via 211 Alameda County resource database + SSA Fremont office via archived official page (agency site unreachable 2026-10-13).",
+   "filename": "html-alameda-ssa-benefits.jsonl",
+   "sha256": "548314f2000582a52a6eb0fcff0c2f090a291b0a38a0504245184c588b407cd7"
+  }
+ ]
+}
