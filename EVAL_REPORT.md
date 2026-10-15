@@ -172,3 +172,31 @@ re-run across all 6 languages × all claims then showed **0 ungrounded**.
 their `claim_en` against English chunk text — overlap proves the *content* is in the
 source, not that the translation is faithful or fluent. UI strings in `i18n.py` are
 drafts, not native-speaker reviewed.
+
+## Adversarial eval upgrade (2026-10-14, from outside AI feedback)
+
+`eval_adversarial.py` adds the 4 test types keyword grounding cannot see:
+
+1. **supported_claim** — key numbers in the claim must appear in the cited chunk.
+2. **contradicted_claim** — a plausible-but-false claim (number swapped) must be
+   REJECTED. Demonstrated: the old `evaluate()` PASSES "Prop 5 would RAISE the
+   threshold to 75%" (high word overlap, wrong numbers); `evaluate_strict()`
+   FAILS it via `contradiction_detected()`.
+3. **missing_info** — `tests/test_eval_adversarial.py`: /api/ask in no-key mode
+   returns sources + honest decline, never a fabricated summary.
+4. **multilingual_fidelity** — amounts/dates across the 6 verified languages
+   match English: 75/75 golden claims OK, with locale digits normalized
+   (Devanagari/Arabic-Indic/Persian) and legitimate zh conversions accounted
+   for (billion→yi ×10, million→yi ÷100, month words→month numbers).
+
+`demo/eval_false_claim_demo.py` prints a human-readable false-claim injection
+transcript for the demo video (synthetic fixture, clearly labeled).
+
+pytest: 5/5. eval.py self-tests: 11/11. Adversarial self-tests: 6/6.
+
+## Source-and-status panel (2026-10-14)
+
+Every civic item now carries: issuing agency, document, date, and a
+current/archived status chip. Golden entries have a `source` metadata block;
+`/api/notices` adds agency + archived status. The ballot result card and
+notice feed render the panel; citations still one-tap to the exact passage.

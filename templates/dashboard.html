@@ -65,6 +65,7 @@
             <span class="featured-badge" id="featuredBadge" hidden></span>
           </div>
         </div>
+        <div id="resSource" class="source-strip" hidden></div>
         <div id="resultLoading" class="result-loading" hidden>
           <div class="spinner"></div><p id="resultLoadingText"></p>
         </div>
@@ -353,6 +354,30 @@ async function tr(text, target, source) {
   } catch (e) { return null; }
 }
 
+// ---------- source-and-status panel ----------
+// Every civic item says who published it, what it is, and whether it is
+// current or an archived record. Agency/document names are proper nouns
+// (not translated); the labels are.
+function statusChip(status) {
+  const s = document.createElement("span");
+  s.className = "status-chip " + (status === "current" ? "is-current" : "is-archived");
+  s.textContent = status === "current" ? S("statusCurrent") : S("statusArchived");
+  return s;
+}
+function sourceStrip(source) {
+  const wrap = document.createElement("div");
+  wrap.className = "source-strip-inner";
+  const label = document.createElement("span");
+  label.className = "source-label";
+  label.textContent = S("sourceLabel") + ": ";
+  wrap.appendChild(label);
+  const parts = [source.agency, source.document, source.date].filter(Boolean);
+  wrap.appendChild(document.createTextNode(parts.join(" · ")));
+  wrap.appendChild(document.createTextNode(" "));
+  wrap.appendChild(statusChip(source.status || "archived"));
+  return wrap;
+}
+
 // ---------- featured cards (bilingual) ----------
 async function loadCards() {
   const wrap = $("cards");
@@ -411,6 +436,14 @@ async function loadFeatured(id) {
     }
     $("resultLoading").hidden = true;
     $("resTitleText").textContent = data.title;
+    const srcBox = $("resSource");
+    srcBox.innerHTML = "";
+    if (data.source && data.source.agency) {
+      srcBox.appendChild(sourceStrip(data.source));
+      srcBox.hidden = false;
+    } else {
+      srcBox.hidden = true;
+    }
     const badge = $("featuredBadge");
     badge.hidden = false; badge.textContent = S("featuredBadge");
     const groups = [
@@ -456,10 +489,10 @@ async function loadNotices() {
       b.type = "button"; b.className = "notice-item";
       const t = document.createElement("span"); t.className = "notice-title"; t.textContent = n.title;
       b.appendChild(t);
-      if (n.date) {
-        const d = document.createElement("span"); d.className = "notice-date"; d.textContent = n.date;
-        b.appendChild(d);
-      }
+      const meta = document.createElement("span"); meta.className = "notice-meta";
+      meta.appendChild(document.createTextNode((n.agency || "") + (n.date ? " · " + n.date : "") + " "));
+      meta.appendChild(statusChip(n.status || "archived"));
+      b.appendChild(meta);
       b.addEventListener("click", () => openChunk(n.source_file, n.page));
       wrap.appendChild(b);
     }

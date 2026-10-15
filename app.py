@@ -324,6 +324,7 @@ def golden_list():
                 "title": _derive_card_title(e),
                 "query": e.get("query", ""),
                 "topic": e.get("topic", ""),
+                "source": e.get("source") or {},
             }
             for e in _get_golden_entries()
         ]
@@ -366,6 +367,7 @@ def golden_entry(entry_id):
             "language": language,
             "featured": True,
             "featured_label": "✨ Featured example — hand-verified",
+            "source": entry.get("source") or {},
             "claims": claims,
         }
     )
@@ -501,6 +503,10 @@ def _load_notices():
                     "title": title,
                     "date": date,
                     "snippet": text[:280] + ("…" if len(text) > 280 else ""),
+                    # Source-and-status panel fields: every civic item says
+                    # who published it and whether it is current or archived.
+                    "agency": "City of Fremont",
+                    "status": "archived",
                 }
             )
     return items

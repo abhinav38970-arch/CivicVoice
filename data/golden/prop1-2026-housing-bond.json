@@ -1,4 +1,11 @@
 {
+  "source": {
+    "agency": "California Secretary of State",
+    "document": "Official Voter Information Guide, General Election November 2026",
+    "date": "2026",
+    "status": "current",
+    "status_note": "November 2026 election upcoming as of October 2026."
+  },
   "card_title": "🗳️ Prop 1: housing bond (Nov 2026)",
   "claims": [
     {
