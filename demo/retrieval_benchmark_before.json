@@ -1,0 +1,1196 @@
+{
+ "model": "all-MiniLM-L6-v2",
+ "k": 5,
+ "summary": {
+  "en": {
+   "n": 19,
+   "recall@1": 0.631578947368421,
+   "recall@3": 0.8421052631578947,
+   "recall@5": 0.8421052631578947,
+   "mean_top1_score": 0.6472346773185139,
+   "mean_expected_score": 0.5628750704505467
+  },
+  "es": {
+   "n": 19,
+   "recall@1": 0.0,
+   "recall@3": 0.10526315789473684,
+   "recall@5": 0.10526315789473684,
+   "mean_top1_score": 0.3439857649297968,
+   "mean_expected_score": 0.02812751264948594
+  },
+  "hi": {
+   "n": 19,
+   "recall@1": 0.05263157894736842,
+   "recall@3": 0.10526315789473684,
+   "recall@5": 0.15789473684210525,
+   "mean_top1_score": 0.2016541317889565,
+   "mean_expected_score": 0.027832217122379103
+  },
+  "pa": {
+   "n": 19,
+   "recall@1": 0.05263157894736842,
+   "recall@3": 0.10526315789473684,
+   "recall@5": 0.10526315789473684,
+   "mean_top1_score": 0.3343659184480968,
+   "mean_expected_score": 0.030883773377067165
+  },
+  "zh": {
+   "n": 19,
+   "recall@1": 0.0,
+   "recall@3": 0.10526315789473684,
+   "recall@5": 0.10526315789473684,
+   "mean_top1_score": 0.269415502485476,
+   "mean_expected_score": 0.02591358360491301
+  },
+  "fa": {
+   "n": 19,
+   "recall@1": 0.0,
+   "recall@3": 0.0,
+   "recall@5": 0.0,
+   "mean_top1_score": 0.2847959673718402,
+   "mean_expected_score": 0.0
+  }
+ },
+ "results": [
+  {
+   "lang": "en",
+   "claim": "c1",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": 2,
+   "top1_file": "fremont-council-2026-07-07-charter-public-comment.pdf",
+   "top1_score": 0.5239284498350961,
+   "expected_score": 0.5205144677843366
+  },
+  {
+   "lang": "es",
+   "claim": "c1",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "newark-council-biennial-budget-2026-28.pdf",
+   "top1_score": 0.2881106436252594,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c1",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "fremont-council-handbook.pdf",
+   "top1_score": 0.16575106978416443,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c1",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.3067096471786499,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c1",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.25083446502685547,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c1",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-primary.pdf",
+   "top1_score": 0.2895874083042145,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c2",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "union-city-council-2026-meeting-schedule-resolution.pdf",
+   "top1_score": 0.6148529392022353,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "es",
+   "claim": "c2",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "alameda-bos-2026-03-05-agenda.pdf",
+   "top1_score": 0.3505504261363636,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c2",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-proposed-budget-presentation.pdf",
+   "top1_score": 0.3289217591285706,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c2",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-proposed-budget-presentation.pdf",
+   "top1_score": 0.35432652831077577,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c2",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "union-city-council-2025-09-09-special-agenda.pdf",
+   "top1_score": 0.27088242769241333,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c2",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.32651224732398987,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c3",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": 1,
+   "top1_file": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "top1_score": 0.6387833833694458,
+   "expected_score": 0.6387833833694458
+  },
+  {
+   "lang": "es",
+   "claim": "c3",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-general.pdf",
+   "top1_score": 0.35136574506759644,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c3",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2022-general.pdf",
+   "top1_score": 0.15647980570793152,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c3",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.2807958424091339,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c3",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.2506086826324463,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c3",
+   "file": "charter-advisory.json",
+   "expected": "20260406_Charter_Advisory_Committee_Meeting_Agenda_packet.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.26519596576690674,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c1",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": 3,
+   "top1_file": "union-city-council-2026-meeting-schedule-resolution.pdf",
+   "top1_score": 0.5754080295562745,
+   "expected_score": 0.5332429468631744
+  },
+  {
+   "lang": "es",
+   "claim": "c1",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.402448832988739,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c1",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-proposed-budget-presentation.pdf",
+   "top1_score": 0.23869207501411438,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c1",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.3723348259925842,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c1",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": 2,
+   "top1_file": "fremont-fy2026-27-proposed-budget-presentation.pdf",
+   "top1_score": 0.28995493054389954,
+   "expected_score": 0.2638399600982666
+  },
+  {
+   "lang": "fa",
+   "claim": "c1",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.2703971862792969,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c2",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.44977290980956136,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "es",
+   "claim": "c2",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.5174913338252476,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c2",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2022-general.pdf",
+   "top1_score": 0.2071569561958313,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c2",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.27304607629776,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c2",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.29877036809921265,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c2",
+   "file": "closed-session-labor.json",
+   "expected": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.3132457733154297,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c3",
+   "file": "closed-session-labor.json",
+   "expected": "20250304_REVISED_Closed_Session_Notice_Labor_Negotiations.pdf",
+   "rank": 2,
+   "top1_file": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "top1_score": 0.5322440981864929,
+   "expected_score": 0.5241140365600586
+  },
+  {
+   "lang": "es",
+   "claim": "c3",
+   "file": "closed-session-labor.json",
+   "expected": "20250304_REVISED_Closed_Session_Notice_Labor_Negotiations.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-general.pdf",
+   "top1_score": 0.28046268224716187,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c3",
+   "file": "closed-session-labor.json",
+   "expected": "20250304_REVISED_Closed_Session_Notice_Labor_Negotiations.pdf",
+   "rank": null,
+   "top1_file": "2025_MidYear_Progress_Report.pdf",
+   "top1_score": 0.288111475110054,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c3",
+   "file": "closed-session-labor.json",
+   "expected": "20250304_REVISED_Closed_Session_Notice_Labor_Negotiations.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-proposed-budget-presentation.pdf",
+   "top1_score": 0.3577647805213928,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c3",
+   "file": "closed-session-labor.json",
+   "expected": "20250304_REVISED_Closed_Session_Notice_Labor_Negotiations.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.30730533599853516,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c3",
+   "file": "closed-session-labor.json",
+   "expected": "20250304_REVISED_Closed_Session_Notice_Labor_Negotiations.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.2833583652973175,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c1",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": 1,
+   "top1_file": "2025_MidYear_Progress_Report.pdf",
+   "top1_score": 0.6339443922042847,
+   "expected_score": 0.6339443922042847
+  },
+  {
+   "lang": "es",
+   "claim": "c1",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "newark-council-biennial-budget-2026-28.pdf",
+   "top1_score": 0.3534232974052429,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c1",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "newark-council-biennial-budget-2026-28.pdf",
+   "top1_score": 0.15685155987739563,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c1",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "newark-council-biennial-budget-2026-28.pdf",
+   "top1_score": 0.3288588225841522,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c1",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.22482284903526306,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c1",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-primary.pdf",
+   "top1_score": 0.17759814858436584,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c2",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": 1,
+   "top1_file": "2025_MidYear_Progress_Report.pdf",
+   "top1_score": 0.4786609411239624,
+   "expected_score": 0.4786609411239624
+  },
+  {
+   "lang": "es",
+   "claim": "c2",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "alameda-bos-2026-01-27-agenda.pdf",
+   "top1_score": 0.3600385785102844,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c2",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2022-general.pdf",
+   "top1_score": 0.1624653935432434,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c2",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.2696176767349243,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c2",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.27253466844558716,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c2",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-primary.pdf",
+   "top1_score": 0.24005770683288574,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c3",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.45776911888803756,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "es",
+   "claim": "c3",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "newark-council-biennial-budget-2026-28.pdf",
+   "top1_score": 0.24980595707893372,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c3",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2022-general.pdf",
+   "top1_score": 0.17186029255390167,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c3",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.33113551139831543,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c3",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.20035362243652344,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c3",
+   "file": "midyear-winter-relief.json",
+   "expected": "2025_MidYear_Progress_Report.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.2802327275276184,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c1",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": 1,
+   "top1_file": "ca-voter-guide-2026-general.pdf",
+   "top1_score": 0.8070212602615356,
+   "expected_score": 0.8070212602615356
+  },
+  {
+   "lang": "es",
+   "claim": "c1",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2020-general.pdf",
+   "top1_score": 0.4441257119178772,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c1",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": 5,
+   "top1_file": "ca-voter-guide-2020-general.pdf",
+   "top1_score": 0.19806736707687378,
+   "expected_score": 0.16577869653701782
+  },
+  {
+   "lang": "pa",
+   "claim": "c1",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": 1,
+   "top1_file": "ca-voter-guide-2026-general.pdf",
+   "top1_score": 0.2750821113586426,
+   "expected_score": 0.2750821113586426
+  },
+  {
+   "lang": "zh",
+   "claim": "c1",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.26959869265556335,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c1",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.26520049571990967,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c2",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": 2,
+   "top1_file": "ca-voter-guide-2024-general.pdf",
+   "top1_score": 0.7390738725662231,
+   "expected_score": 0.712345436344976
+  },
+  {
+   "lang": "es",
+   "claim": "c2",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2020-general.pdf",
+   "top1_score": 0.2769436836242676,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c2",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2022-general.pdf",
+   "top1_score": 0.1944345235824585,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c2",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": 2,
+   "top1_file": "newark-council-biennial-budget-2026-28.pdf",
+   "top1_score": 0.3469882309436798,
+   "expected_score": 0.31170958280563354
+  },
+  {
+   "lang": "zh",
+   "claim": "c2",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-proposed-budget-presentation.pdf",
+   "top1_score": 0.23916080594062805,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c2",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.31095677614212036,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c3",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": 1,
+   "top1_file": "ca-voter-guide-2026-general.pdf",
+   "top1_score": 0.804600179195404,
+   "expected_score": 0.804600179195404
+  },
+  {
+   "lang": "es",
+   "claim": "c3",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": 2,
+   "top1_file": "ca-voter-guide-2024-general.pdf",
+   "top1_score": 0.340186208486557,
+   "expected_score": 0.33245912194252014
+  },
+  {
+   "lang": "hi",
+   "claim": "c3",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": 3,
+   "top1_file": "ca-voter-guide-2022-general.pdf",
+   "top1_score": 0.16370654106140137,
+   "expected_score": 0.153523787856102
+  },
+  {
+   "lang": "pa",
+   "claim": "c3",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.29830697178840637,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c3",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "20250318_CC_Minutes__CLOSED_SESSION.pdf",
+   "top1_score": 0.2140677273273468,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c3",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-primary.pdf",
+   "top1_score": 0.28367361426353455,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c4",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": 1,
+   "top1_file": "ca-voter-guide-2026-general.pdf",
+   "top1_score": 0.8797003626823425,
+   "expected_score": 0.8797003626823425
+  },
+  {
+   "lang": "es",
+   "claim": "c4",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "alameda-bos-2026-01-27-agenda.pdf",
+   "top1_score": 0.42093420028686523,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c4",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2022-general.pdf",
+   "top1_score": 0.23270702362060547,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c4",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.40272945165634155,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c4",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.2958027720451355,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c4",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-primary.pdf",
+   "top1_score": 0.23656396567821503,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c5",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": 1,
+   "top1_file": "ca-voter-guide-2026-general.pdf",
+   "top1_score": 0.7399579882621765,
+   "expected_score": 0.7399579882621765
+  },
+  {
+   "lang": "es",
+   "claim": "c5",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "alameda-bos-2026-01-27-agenda.pdf",
+   "top1_score": 0.4239703416824341,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c5",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": 1,
+   "top1_file": "ca-voter-guide-2026-general.pdf",
+   "top1_score": 0.20950964093208313,
+   "expected_score": 0.20950964093208313
+  },
+  {
+   "lang": "pa",
+   "claim": "c5",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.408797025680542,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c5",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.3170381784439087,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c5",
+   "file": "prop1-2026-housing-bond.json",
+   "expected": "ca-voter-guide-2026-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-primary.pdf",
+   "top1_score": 0.31934165954589844,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c1",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": 1,
+   "top1_file": "ca-voter-guide-2024-general.pdf",
+   "top1_score": 0.6593868136405945,
+   "expected_score": 0.6593868136405945
+  },
+  {
+   "lang": "es",
+   "claim": "c1",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2020-general.pdf",
+   "top1_score": 0.28200387954711914,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c1",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "fremont-council-handbook.pdf",
+   "top1_score": 0.16750258207321167,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c1",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-general.pdf",
+   "top1_score": 0.2594345808029175,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c1",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.2652536630630493,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c1",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-primary.pdf",
+   "top1_score": 0.28450384736061096,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c2",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": 1,
+   "top1_file": "ca-voter-guide-2024-general.pdf",
+   "top1_score": 0.7126033306121826,
+   "expected_score": 0.7126033306121826
+  },
+  {
+   "lang": "es",
+   "claim": "c2",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-biennial-budget-2026-28.pdf",
+   "top1_score": 0.35227513313293457,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c2",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2022-general.pdf",
+   "top1_score": 0.19446882605552673,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c2",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.31618815660476685,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c2",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": 3,
+   "top1_file": "ca-voter-guide-2026-general.pdf",
+   "top1_score": 0.2839807868003845,
+   "expected_score": 0.22851812839508057
+  },
+  {
+   "lang": "fa",
+   "claim": "c2",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.3390001952648163,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c3",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": 1,
+   "top1_file": "ca-voter-guide-2024-general.pdf",
+   "top1_score": 0.6115843057632446,
+   "expected_score": 0.6115843057632446
+  },
+  {
+   "lang": "es",
+   "claim": "c3",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": 3,
+   "top1_file": "ca-voter-guide-2020-general.pdf",
+   "top1_score": 0.20511430501937866,
+   "expected_score": 0.2019636183977127
+  },
+  {
+   "lang": "hi",
+   "claim": "c3",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "fremont-fy2026-27-adopted-budget.pdf",
+   "top1_score": 0.16273236274719238,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c3",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-biennial-budget-2026-28.pdf",
+   "top1_score": 0.3294779062271118,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c3",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.23212701082229614,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c3",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.2938626706600189,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c4",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": 1,
+   "top1_file": "ca-voter-guide-2024-general.pdf",
+   "top1_score": 0.7291974778175354,
+   "expected_score": 0.7291974778175354
+  },
+  {
+   "lang": "es",
+   "claim": "c4",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2020-general.pdf",
+   "top1_score": 0.331403523683548,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c4",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2022-general.pdf",
+   "top1_score": 0.19225656986236572,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c4",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.41068559885025024,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c4",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.3097512722015381,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c4",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-primary.pdf",
+   "top1_score": 0.32506316900253296,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "en",
+   "claim": "c5",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": 1,
+   "top1_file": "ca-voter-guide-2024-general.pdf",
+   "top1_score": 0.7089690160751343,
+   "expected_score": 0.7089690160751343
+  },
+  {
+   "lang": "es",
+   "claim": "c5",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "alameda-bos-2026-01-27-agenda.pdf",
+   "top1_score": 0.3050750494003296,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "hi",
+   "claim": "c5",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.23975268006324768,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "pa",
+   "claim": "c5",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-biennial-budget-2026-28.pdf",
+   "top1_score": 0.43067270517349243,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "zh",
+   "claim": "c5",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "newark-council-recent-agenda.pdf",
+   "top1_score": 0.32604628801345825,
+   "expected_score": 0.0
+  },
+  {
+   "lang": "fa",
+   "claim": "c5",
+   "file": "prop2-school-bonds.json",
+   "expected": "ca-voter-guide-2024-general.pdf",
+   "rank": null,
+   "top1_file": "ca-voter-guide-2026-primary.pdf",
+   "top1_score": 0.306771457195282,
+   "expected_score": 0.0
+  }
+ ]
+}

@@ -92,15 +92,36 @@ on citation validity, keyword grounding (Unicode-aware: Devanagari, Gurmukhi, Ha
 Perso-Arabic), and advisory-language flags, with a PASS/FAIL verdict. Weak retrieval
 (`low_confidence`) makes the app decline to answer rather than invent one.
 
+## Multilingual retrieval upgrade (branch `multilingual-retrieval`)
+
+The old embedding model (all-MiniLM-L6-v2) is English-oriented: Hindi queries
+scored ~0.15 on wrong docs while English scored 0.70 on the right doc
+(full benchmark in EVAL_REPORT.md). The fix swaps to
+`intfloat/multilingual-e5-base` with `query: `/`passage: ` prefixes.
+
+The build machine couldn't download the 1.1GB model (throttled pipe), so
+finish the swap on a Mac with normal internet:
+
+```bash
+git checkout multilingual-retrieval
+source .venv/bin/activate
+python retriever.py --rebuild   # downloads the model once (~1.1GB), re-embeds 1,258 chunks
+python demo/retrieval_benchmark.py --tag after
+python -m pytest tests/ -q
+```
+
+Then paste the `after` table into EVAL_REPORT.md. If R@5 on hi/es/zh/fa jumps
+(Claude's estimate: +15-20 points minimum), merge the branch to master.
+
 ## Honest limitations
 
 - No LLM key exists in this repo: the harness has graded mock placeholders and
   hand-written, hand-verified golden claims — **never real model output**.
-- Retrieval is English-only in practice: the embedding model (all-MiniLM-L6-v2) does
-  not handle non-English queries well — e.g. the Hindi query 'स्कूल बॉन्ड' scored 0.149
-  on irrelevant docs while the English equivalent scored 0.702 on the right doc. Free-form
-  questions should be asked in English; the six-language support is for the featured
-  summaries, verified by eval.py against English source text.
+- Retrieval was English-only in practice under the old embedding model
+  (all-MiniLM-L6-v2) — e.g. the Hindi query 'स्कूल बॉन्ड' scored 0.149
+  on irrelevant docs while the English equivalent scored 0.702 on the right doc.
+  Fixed on branch `multilingual-retrieval` (pending Mac verification); free-form
+  questions should be asked in English until the swap is verified.
 - Advisory detection is substring matching; paraphrased voting advice walks through.
 - Non-English grounding validates content via English source text, not translation
   quality. Translation fluency and reading level are untested.

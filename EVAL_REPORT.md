@@ -200,3 +200,32 @@ Every civic item now carries: issuing agency, document, date, and a
 current/archived status chip. Golden entries have a `source` metadata block;
 `/api/notices` adds agency + archived status. The ballot result card and
 notice feed render the panel; citations still one-tap to the exact passage.
+
+## Multilingual retrieval upgrade (2026-10-15, branch `multilingual-retrieval`)
+
+Outside review (Claude Haiku 4.5, which read the repo) flagged the core
+weakness: non-English retrieval is broken — the embedding model
+(all-MiniLM-L6-v2) is English-oriented. Benchmark
+(`demo/retrieval_benchmark.py`: golden claim text as query in 6 languages,
+expected doc = claim's cited source file, 114 cases):
+
+| lang | R@1  | R@3  | R@5  | mean top-1 |
+|------|------|------|------|------------|
+| en   | 0.63 | 0.84 | 0.84 | 0.647      |
+| es   | 0.00 | 0.11 | 0.11 | 0.344      |
+| hi   | 0.05 | 0.11 | 0.16 | 0.202      |
+| pa   | 0.05 | 0.11 | 0.11 | 0.334      |
+| zh   | 0.00 | 0.11 | 0.11 | 0.269      |
+| fa   | 0.00 | 0.00 | 0.00 | 0.285      |
+
+The fix (on this branch): swap to `intfloat/multilingual-e5-base` with the
+required `query: `/`passage: ` prefixes; the cached index records its model
+name in `data/index/model.txt` and rebuilds automatically on model change.
+`tests/test_retriever_swap.py` verifies prefix + rebuild logic with a stubbed
+model (2/2 pass).
+
+Status: code complete, NOT yet end-to-end verified. The build VM's pipe to
+Hugging Face is throttled (~2KB/s; the 1.1GB model would take days), so the
+re-embedding and after-benchmark must run on a machine with normal internet
+(Abhinav's Mac). See README "Multilingual retrieval upgrade" for the exact
+commands. Do not merge to master until the after-benchmark is recorded here.

@@ -1,5 +1,11 @@
 """CivicVoice retrieval: embeds parsed document chunks with sentence-transformers
-(all-MiniLM-L6-v2) and persists a normalized cosine-similarity index to data/index/.
+(intfloat/multilingual-e5-base) and persists a normalized cosine-similarity
+index to data/index/.
+
+The multilingual model replaced all-MiniLM-L6-v2 on 2026-10-15: MiniLM is
+English-oriented and scored non-English queries near zero (Hindi R@5=0.16,
+Farsi R@5=0.00 on the golden-claim benchmark). e5 needs "query: "/"passage: "
+prefixes — see QUERY_PREFIX/PASSAGE_PREFIX.
 
 Usage:
     python retriever.py            # build (or load cached) index, run 3-line test
@@ -30,8 +36,13 @@ PARSED_DIR = os.path.join(BASE_DIR, "data", "parsed")
 INDEX_DIR = os.path.join(BASE_DIR, "data", "index")
 EMB_PATH = os.path.join(INDEX_DIR, "embeddings.npy")
 META_PATH = os.path.join(INDEX_DIR, "meta.json")
-MODEL_NAME = "all-MiniLM-L6-v2"
-MODEL_DIR = os.path.join(BASE_DIR, "models", "all-MiniLM-L6-v2")
+MODEL_NAME = "intfloat/multilingual-e5-base"
+MODEL_DIR = os.path.join(BASE_DIR, "models", "multilingual-e5-base")
+# e5 models are trained with task prefixes; queries and passages MUST carry
+# them or retrieval quality collapses. (MiniLM, the previous model, used none.)
+QUERY_PREFIX = "query: "
+PASSAGE_PREFIX = "passage: "
+MODEL_ID_PATH = os.path.join(INDEX_DIR, "model.txt")
 MANIFEST_PATH = os.path.join(BASE_DIR, "data", "SOURCE_MANIFEST.json")
 LOW_CONFIDENCE_THRESHOLD = 0.30  # top-score floor; below this, matches are weak
 METADATA_BOOST_WEIGHT = 0.15  # max score add for query terms matching a chunk's
@@ -71,15 +82,15 @@ def get_model():
             _model = SentenceTransformer(source)
         except Exception as e:  # noqa: BLE001 - translated below, never raw
             raise RuntimeError(
-                "Could not load the embedding model 'all-MiniLM-L6-v2' "
+                "Could not load the embedding model 'intfloat/multilingual-e5-base' "
                 f"(tried: {source}).\n"
                 "This usually means this machine is offline and the model was "
                 "never downloaded.\n"
                 "What to do:\n"
                 "  1. Connect to the internet and run any CivicVoice command "
-                "once — the model (~90MB) downloads automatically from "
+                "once — the model (~1.1GB) downloads automatically from "
                 "Hugging Face and is cached for offline use afterwards.\n"
-                "  2. Or copy the 'models/all-MiniLM-L6-v2/' folder from the "
+                "  2. Or copy the 'models/multilingual-e5-base/' folder from the "
                 "project download into this copy of the project.\n"
                 f"Technical detail (for debugging): {type(e).__name__}: {e}"
             )
@@ -154,9 +165,10 @@ def load_chunks():
 
 
 def build_index(chunks, model_name=MODEL_NAME):
-    """Encode chunk texts; return L2-normalized (N, D) embedding matrix."""
+    """Encode chunk texts (with the e5 passage prefix); return L2-normalized
+    (N, D) embedding matrix."""
     model = get_model()
-    texts = [c["text"] for c in chunks]
+    texts = [PASSAGE_PREFIX + c["text"] for c in chunks]
     emb = model.encode(texts, show_progress_bar=True, convert_to_numpy=True)
     norms = np.linalg.norm(emb, axis=1, keepdims=True)
     norms[norms == 0] = 1.0
@@ -168,6 +180,16 @@ def save_index(embeddings, chunks):
     np.save(EMB_PATH, embeddings)
     with open(META_PATH, "w", encoding="utf-8") as f:
         json.dump(chunks, f, ensure_ascii=False)
+    with open(MODEL_ID_PATH, "w", encoding="utf-8") as f:
+        f.write(MODEL_NAME + "\n")
+
+
+def _cached_model_name():
+    try:
+        with open(MODEL_ID_PATH, encoding="utf-8") as f:
+            return f.read().strip()
+    except OSError:
+        return None
 
 
 def load_index():
@@ -194,12 +216,16 @@ def get_index(rebuild=False):
             "see README 'Known gaps'.)"
         )
     if os.path.exists(EMB_PATH) and os.path.exists(META_PATH) and not rebuild:
-        embeddings, cached = load_index()
-        if len(cached) == len(chunks):
-            _church = (embeddings, chunks)
-            print(f"Loaded cached index: {len(chunks)} chunks from {INDEX_DIR}")
-            return _church
-        print("Chunk count changed; rebuilding index...")
+        if _cached_model_name() != MODEL_NAME:
+            print(f"Embedding model changed ({_cached_model_name()} -> "
+                  f"{MODEL_NAME}); rebuilding index...")
+        else:
+            embeddings, cached = load_index()
+            if len(cached) == len(chunks):
+                _church = (embeddings, chunks)
+                print(f"Loaded cached index: {len(chunks)} chunks from {INDEX_DIR}")
+                return _church
+            print("Chunk count changed; rebuilding index...")
     print(f"Building index for {len(chunks)} chunks ({MODEL_NAME})...")
     embeddings = build_index(chunks)
     save_index(embeddings, chunks)
@@ -235,7 +261,7 @@ def retrieve(query, k=5, rebuild=False):
     honest about it instead of presenting weak matches as answers."""
     embeddings, chunks = get_index(rebuild=rebuild)
     model = get_model()
-    q = model.encode([query], convert_to_numpy=True)[0]
+    q = model.encode([QUERY_PREFIX + query], convert_to_numpy=True)[0]
     q = q / (np.linalg.norm(q) or 1.0)
     scores = embeddings @ q  # cosine, since both sides normalized
     scores = scores + _metadata_boost(query, chunks)
