@@ -797,3 +797,104 @@ main { padding-bottom: 100px; }
 
 /* ballot: back-to-list */
 .back-btn { margin-bottom: 8px; padding-left: 0; font-weight: 700; }
+
+/* ================= responsive-web: app on mobile, web on desktop ================= */
+/* Mobile-first base (<=1023px): fixed bottom tab bar, app feel. */
+
+/* overflow guards */
+html, body { overflow-x: clip; }
+img, svg { max-width: 100%; }
+
+/* ---------- bottom tab bar (mobile + tablet) ---------- */
+.tabbar {
+  position: fixed; top: auto; bottom: 0; left: 0; right: 0;
+  margin: 0; border-radius: 20px 20px 0 0;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+  z-index: 150;
+}
+.tabbar-brand { display: none; }
+.tab { min-height: 58px; }
+/* content clears the bottom tab bar + floating chat button */
+main { padding-bottom: 176px; }
+.chat-fab { bottom: 100px; right: 16px; }
+
+/* ---------- touch targets >= 44px ---------- */
+.icon-pill { width: 44px; height: 44px; }
+.chip-btn, .primary-btn, .example-chip, .auth-tab { min-height: 44px; }
+#askBtn { min-height: 48px; }
+#chatSend { width: 44px; height: 44px; }
+.topic-row, .notice-item { min-height: 56px; }
+.ask-field-wrap .mic-inside { min-width: 44px; min-height: 44px; }
+
+/* ---------- language picker: neat grid at every size (no swipe scroller) ---------- */
+.lang-scroll {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  overflow: visible; -webkit-mask-image: none; mask-image: none;
+  padding-bottom: 4px; scroll-snap-type: none;
+}
+.lang-pill { flex: none; min-width: 0; }
+
+/* ---------- tablet (601-1023px): centered column, tidy grids ---------- */
+@media (min-width: 601px) and (max-width: 1023px) {
+  .app-shell { max-width: 700px; }
+  .lang-scroll {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    overflow: visible; -webkit-mask-image: none; mask-image: none;
+    padding-bottom: 4px;
+  }
+  .lang-pill { flex: none; }
+}
+
+/* ---------- desktop (>=1024px): real web layout ---------- */
+@media (min-width: 1024px) {
+  .app-shell { max-width: 1100px; padding: 0 32px 64px; }
+
+  /* tab bar becomes a top nav bar: brand left, tabs as links */
+  .tabbar {
+    position: sticky; top: 0;
+    border-radius: 18px; margin: 0 0 22px;
+    padding: 8px 12px; align-items: center;
+  }
+  .tabbar-brand {
+    display: block; font-weight: 800; font-size: 1.25rem;
+    padding: 8px 12px; margin-inline-end: auto; white-space: nowrap;
+  }
+  .tab { flex: 0 0 auto; flex-direction: row; gap: 8px; padding: 12px 18px; min-height: 48px; }
+  .tab span { font-size: 0.92rem; }
+
+  main { padding-bottom: 100px; }
+  .chat-fab { bottom: 18px; right: 24px; }
+
+  /* ballot: card grid; detail is a centered focused panel */
+  .topic-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .result-card { max-width: 780px; margin-left: auto; margin-right: auto; }
+
+  /* news: two comfortable columns */
+  #pane-news { max-width: 1020px; margin: 0 auto; }
+  .notices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start; }
+
+  /* forms read at a comfortable width, never edge-to-edge */
+  #pane-tasks, #pane-ask { max-width: 780px; margin: 0 auto; }
+
+  /* text measure cap */
+  .pane-head p, .welcome-sub, .hero-sub { max-width: 70ch; }
+
+  /* landing: picker as a neat grid, roomier hero */
+  .lang-scroll {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    overflow: visible; -webkit-mask-image: none; mask-image: none;
+    padding-bottom: 4px;
+  }
+  .lang-pill { flex: none; }
+  .picker-card, .auth-card { max-width: 720px; margin-left: auto; margin-right: auto; }
+  .welcome-title { font-size: 3.5rem; }
+  .gatekeeper-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* very wide: three ballot columns */
+@media (min-width: 1400px) {
+  .topic-list { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* source strip: keep the date on one line */
+.nowrap { white-space: nowrap; }

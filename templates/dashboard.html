@@ -36,6 +36,7 @@
   </div>
 
   <nav class="tabbar" role="tablist">
+    <span class="tabbar-brand" aria-hidden="true">CivicVoice</span>
     <button type="button" class="tab active" data-tab="news" role="tab">📰<span data-i18n="tabNews">News</span></button>
     <button type="button" class="tab" data-tab="ballot" role="tab">🗳️<span data-i18n="tabBallot">Ballot</span></button>
     <button type="button" class="tab" data-tab="tasks" role="tab">🔧<span data-i18n="tabTasks">City tasks</span></button>
@@ -393,7 +394,13 @@ function sourceStrip(source, citation) {
   label.textContent = S("sourceLabel") + ": ";
   wrap.appendChild(label);
   const parts = [source.agency, source.document, source.date].filter(Boolean);
-  wrap.appendChild(document.createTextNode(parts.join(" · ")));
+  parts.forEach((part, i) => {
+    if (i > 0) wrap.appendChild(document.createTextNode(" · "));
+    const sp = document.createElement("span");
+    if (part === source.date) sp.className = "nowrap";
+    sp.textContent = part;
+    wrap.appendChild(sp);
+  });
   wrap.appendChild(document.createTextNode(" "));
   wrap.appendChild(statusChip(source.status || "archived"));
   if (citation) {
