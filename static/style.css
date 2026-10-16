@@ -483,6 +483,9 @@ body {
   overflow-x: auto; padding: 4px 2px 10px;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  /* scroll affordance: fade the trailing edge so users see there is more */
+  -webkit-mask-image: linear-gradient(to right, #000 90%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 90%, transparent 100%);
 }
 .lang-scroll.small { padding-bottom: 4px; }
 .lang-pill {
@@ -537,14 +540,16 @@ body {
   display: flex; justify-content: space-between; align-items: center;
   padding: 22px 4px 14px;
 }
-.dash-id { display: flex; align-items: center; gap: 12px; }
+.dash-id { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1; }
 .avatar {
   width: 46px; height: 46px; border-radius: 50%;
   background: var(--accent); color: #fff;
   display: flex; align-items: center; justify-content: center;
   font-size: 1.3rem; font-weight: 800; flex-shrink: 0;
 }
-.dash-greet { font-size: 1.12rem; color: var(--ink); }
+.dash-greet { font-size: 1.12rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* greeting stays one line: English sub inline here (block style is for content areas) */
+.dash-greet .en-sub { display: inline; font-size: 0.85em; margin: 0 0 0 6px; }
 .dash-sub { font-size: 0.88rem; color: var(--muted); }
 .dash-actions { display: flex; gap: 8px; }
 .icon-pill {
@@ -577,6 +582,8 @@ body {
 .tab.active { background: var(--accent-soft); color: var(--accent-dark); }
 .tabpane { display: none; }
 .tabpane.active { display: block; }
+/* Keep last content clear of the floating chat button (58px + 18px offset + margin) */
+main { padding-bottom: 100px; }
 .pane-head { padding: 6px 4px 12px; }
 .pane-head h2 { margin: 0 0 4px; font-size: 1.25rem; }
 .pane-head p { margin: 0; font-size: 0.92rem; color: var(--muted); }
@@ -701,8 +708,8 @@ body {
 .source-strip-inner.tappable:hover { border-color: var(--accent); background: var(--accent-soft); }
 .source-label { font-weight: 700; color: var(--ink); }
 .status-chip {
-  display: inline-block; font-size: 0.78rem; font-weight: 700;
-  border-radius: 999px; padding: 4px 12px; white-space: nowrap;
+  display: inline-block; font-size: 0.84rem; font-weight: 700;
+  border-radius: 999px; padding: 5px 14px; white-space: nowrap;
 }
 .status-chip.is-archived { background: #e7e5e4; color: #57534e; }
 .status-chip.is-current { background: #dcfce7; color: #166534; }
