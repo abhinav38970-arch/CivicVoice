@@ -1,5 +1,0 @@
-[
-  "tests/test_retrieval_golden.py::test_low_confidence_signal",
-  "tests/test_retrieval_golden.py::test_quarantined_fixture_never_retrieved",
-  "tests/test_retrieval_golden.py::test_retrieval_golden_cases"
-]

@@ -64,6 +64,7 @@
         <div class="result-head">
           <div>
             <h3 id="resTitleText"></h3>
+            <p id="resTopic" class="topic-line" hidden></p>
             <p id="verifiedLine" class="verified-line" hidden></p>
           </div>
           <div class="result-actions">
@@ -271,6 +272,7 @@ function applyLanguage(lang) {
   });
   stopSpeaking();
   loadCards();
+  loadNotices();
 }
 $("langBtn").addEventListener("click", () => { $("langSheet").hidden = !$("langSheet").hidden; });
 document.querySelectorAll("#langScroll .lang-pill").forEach((b) => {
@@ -404,6 +406,7 @@ function sourceStrip(source, citation) {
 // ---------- ballot list: short scannable rows; tap one for the detail view ----------
 async function loadCards() {
   const wrap = $("cards");
+  const lang = currentLang();
   try {
     const res = await fetch("/api/golden");
     const cards = await res.json();
@@ -411,10 +414,13 @@ async function loadCards() {
     for (const c of cards) {
       const b = document.createElement("button");
       b.type = "button"; b.className = "topic-row";
-      const t = document.createElement("span"); t.className = "topic-row-title"; t.textContent = c.title;
+      const t = document.createElement("span"); t.className = "topic-row-title";
+      // Translated card title, no English subtitle (space is tight).
+      t.textContent = (c.title_i18n && c.title_i18n[lang]) || c.title;
       b.appendChild(t);
       if (c.topic) {
-        const d = document.createElement("span"); d.className = "topic-row-desc"; d.textContent = c.topic;
+        const d = document.createElement("span"); d.className = "topic-row-desc";
+        d.textContent = (c.topic_i18n && c.topic_i18n[lang]) || c.topic;
         b.appendChild(d);
       }
       const chev = document.createElement("span"); chev.className = "topic-row-chev"; chev.textContent = "›";
@@ -459,7 +465,11 @@ async function loadFeatured(id) {
       }
     }
     $("resultLoading").hidden = true;
-    $("resTitleText").textContent = data.title;
+    $("resTitleText").textContent = (data.title_i18n && data.title_i18n[lang]) || data.title;
+    const topicEl = $("resTopic");
+    const topicText = (data.topic_i18n && data.topic_i18n[lang]) || data.topic;
+    if (topicText) { topicEl.textContent = topicText; topicEl.hidden = false; }
+    else { topicEl.hidden = true; }
     const firstCite = (data.claims || []).map((c) => c.citation).find(Boolean) || null;
     const srcBox = $("resSource");
     srcBox.innerHTML = "";
@@ -515,13 +525,16 @@ $("ballotBack").addEventListener("click", () => {
 // ---------- notices ----------
 async function loadNotices() {
   const wrap = $("notices");
+  const lang = currentLang();
   try {
     const items = await (await fetch("/api/notices")).json();
     wrap.innerHTML = "";
     for (const n of items) {
       const b = document.createElement("button");
       b.type = "button"; b.className = "notice-item";
-      const t = document.createElement("span"); t.className = "notice-title"; t.textContent = n.title;
+      const t = document.createElement("span"); t.className = "notice-title";
+      // Translated title, no English subtitle (space is tight).
+      t.textContent = (n.title_i18n && n.title_i18n[lang]) || n.title;
       b.appendChild(t);
       const meta = document.createElement("span"); meta.className = "notice-meta";
       meta.appendChild(document.createTextNode((n.agency || "") + (n.date ? " · " + n.date : "") + " "));

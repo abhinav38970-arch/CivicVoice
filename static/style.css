@@ -742,6 +742,10 @@ main { padding-bottom: 100px; }
   font-style: italic;
 }
 .verified-line[hidden] { display: none; }
+.topic-line {
+  margin: 4px 0 0; font-size: 0.92rem; color: var(--muted); line-height: 1.45;
+}
+.topic-line[hidden] { display: none; }
 
 /* ask: one prominent prompt + example questions */
 .ask-prompt {

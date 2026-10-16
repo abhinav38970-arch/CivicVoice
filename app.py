@@ -35,6 +35,23 @@ import tts_service as tts
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PARSED_DIR = os.path.join(BASE_DIR, "data", "parsed")
 GOLDEN_DIR = os.path.join(BASE_DIR, "data", "golden")
+CONTENT_TITLES_PATH = os.path.join(BASE_DIR, "data", "i18n", "content_titles.json")
+CONTENT_TITLES = None  # lazy: re-read once, then cached
+
+
+def _get_content_titles():
+    """Hand-translated news/ballot titles for the 5 verified non-English languages.
+
+    Returns {"<item-id>": {"title": {"es":..,"hi":..,"pa":..,"zh":..,"fa":..},
+    "topic": {...}}}. Languages without an entry fall back to English."""
+    global CONTENT_TITLES
+    if CONTENT_TITLES is None:
+        try:
+            with open(CONTENT_TITLES_PATH, encoding="utf-8") as f:
+                CONTENT_TITLES = json.load(f)
+        except (OSError, ValueError):
+            CONTENT_TITLES = {}
+    return CONTENT_TITLES
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("CIVICVOICE_SECRET_KEY") or secrets.token_hex(32)
@@ -317,13 +334,16 @@ def api_upload():
 @app.get("/api/golden")
 def golden_list():
     """One-click cards for the front page."""
+    titles = _get_content_titles()
     return jsonify(
         [
             {
                 "id": e["id"],
                 "title": _derive_card_title(e),
+                "title_i18n": titles.get(e["id"], {}).get("title", {}),
                 "query": e.get("query", ""),
                 "topic": e.get("topic", ""),
+                "topic_i18n": titles.get(e["id"], {}).get("topic", {}),
                 "source": e.get("source") or {},
             }
             for e in _get_golden_entries()
@@ -362,8 +382,10 @@ def golden_entry(entry_id):
         {
             "id": entry["id"],
             "title": _derive_card_title(entry),
+            "title_i18n": _get_content_titles().get(entry["id"], {}).get("title", {}),
             "query": entry.get("query", ""),
             "topic": entry.get("topic", ""),
+            "topic_i18n": _get_content_titles().get(entry["id"], {}).get("topic", {}),
             "language": language,
             "featured": True,
             "featured_label": "✨ Featured example — hand-verified",
@@ -495,12 +517,15 @@ def _load_notices():
             if text.startswith("City of Fremont press release, "):
                 date = text[len("City of Fremont press release, "):].split(":", 1)[0].strip()
             title = (c.get("section_title") or "").replace("Press release: ", "")
+            nid = f"{c.get('source_file')}:{c.get('page')}"
+            titles = _get_content_titles().get(nid, {})
             items.append(
                 {
-                    "id": f"{c.get('source_file')}:{c.get('page')}",
+                    "id": nid,
                     "source_file": c.get("source_file"),
                     "page": c.get("page"),
                     "title": title,
+                    "title_i18n": titles.get("title", {}),
                     "date": date,
                     "snippet": text[:280] + ("…" if len(text) > 280 else ""),
                     # Source-and-status panel fields: every civic item says
