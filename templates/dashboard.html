@@ -28,9 +28,11 @@
       {% for l in languages %}
       <button type="button" class="lang-pill" data-lang="{{ l.code }}">
         <span class="lang-pill-native">{{ l.native }}</span>
+        {% if not l.verified %}<span class="lang-pill-tag" data-i18n="basicTag">basic</span>{% endif %}
       </button>
       {% endfor %}
     </div>
+    <p class="sheet-legend" data-i18n="pickerLegend">Full support · Basic = English for now, more languages on the way</p>
   </div>
 
   <nav class="tabbar" role="tablist">
@@ -56,10 +58,14 @@
         <h2 data-i18n="ballotTitle">Ballot information</h2>
         <p data-i18n="exampleSub"></p>
       </div>
-      <div id="cards" class="cards"></div>
+      <div id="cards" class="topic-list"></div>
       <div id="ballotResult" class="result-card" hidden>
+        <button type="button" class="link-btn back-btn" id="ballotBack" data-i18n="backToList">← All measures</button>
         <div class="result-head">
-          <h3 id="resTitleText"></h3>
+          <div>
+            <h3 id="resTitleText"></h3>
+            <p id="verifiedLine" class="verified-line" hidden></p>
+          </div>
           <div class="result-actions">
             <button type="button" class="chip-btn" id="listenBtn" hidden>🔊 <span data-i18n="listen">Listen</span></button>
             <span class="featured-badge" id="featuredBadge" hidden></span>
@@ -132,10 +138,18 @@
         <h2 data-i18n="askTitle">Ask about city laws</h2>
         <p data-i18n="askSub"></p>
       </div>
+      <div class="ask-prompt" data-i18n="askPrompt">What would you like to know about Fremont?</div>
       <div class="ask-row">
-        <input id="query" type="text" data-i18n-ph="askPlaceholder" placeholder="" autocomplete="off">
-        <button id="micBtn" type="button" class="icon-btn" hidden aria-label="Speak">🎙️</button>
+        <div class="ask-field-wrap">
+          <input id="query" type="text" data-i18n-ph="askPlaceholder" placeholder="" autocomplete="off">
+          <button id="micBtn" type="button" class="icon-btn mic-inside" hidden aria-label="Speak">🎙️</button>
+        </div>
         <button id="askBtn" type="button"><span class="btn-label" data-i18n="askButton">Ask</span></button>
+      </div>
+      <div class="example-chips" id="exampleChips">
+        <button type="button" class="example-chip" data-i18n="exampleQ1">What are the rules for street parking?</button>
+        <button type="button" class="example-chip" data-i18n="exampleQ2">How do I report illegal dumping?</button>
+        <button type="button" class="example-chip" data-i18n="exampleQ3">What does this city notice mean?</button>
       </div>
       <p id="askHint" class="muted"></p>
       <p id="status" class="status"></p>
@@ -149,14 +163,16 @@
         <div id="askSources"></div>
       </div>
 
-      <div class="pane-head" style="margin-top:24px">
-        <h2 data-i18n="uploadTitle">Upload a document</h2>
-        <p data-i18n="uploadSub"></p>
+      <div class="upload-toggle">
+        <button type="button" class="link-btn" id="uploadToggle" data-i18n="addDocument">Add a document</button>
       </div>
-      <div class="upload-box">
-        <input type="file" id="docFile" accept=".pdf,.txt" hidden>
-        <button type="button" class="primary-btn" id="uploadBtn" data-i18n="uploadBtn">Choose PDF or text file</button>
-        <span id="uploadName" class="muted"></span>
+      <div id="uploadWrap" hidden>
+        <p class="muted" data-i18n="uploadSub" style="margin:0 0 10px"></p>
+        <div class="upload-box">
+          <input type="file" id="docFile" accept=".pdf,.txt" hidden>
+          <button type="button" class="primary-btn" id="uploadBtn" data-i18n="uploadBtn">Choose PDF or text file</button>
+          <span id="uploadName" class="muted"></span>
+        </div>
       </div>
       <div id="uploadOut" class="result-card" hidden>
         <h3 id="uploadTitle"></h3>
@@ -306,7 +322,9 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawe
 function citationEl(c) {
   const b = document.createElement("button");
   b.type = "button"; b.className = "citation";
-  b.textContent = c.source_file + " · page " + pageLabel(c.page);
+  const label = (c.section_title && c.section_title.trim()) || c.source_file;
+  b.textContent = label + " · p. " + pageLabel(c.page);
+  b.setAttribute("aria-label", S("drawerTitle") + ": " + label);
   b.addEventListener("click", () => openChunk(c.source_file, c.page));
   return b;
 }
@@ -364,9 +382,10 @@ function statusChip(status) {
   s.textContent = status === "current" ? S("statusCurrent") : S("statusArchived");
   return s;
 }
-function sourceStrip(source) {
-  const wrap = document.createElement("div");
-  wrap.className = "source-strip-inner";
+function sourceStrip(source, citation) {
+  const wrap = document.createElement(citation ? "button" : "div");
+  wrap.type = "button";
+  wrap.className = "source-strip-inner" + (citation ? " tappable" : "");
   const label = document.createElement("span");
   label.className = "source-label";
   label.textContent = S("sourceLabel") + ": ";
@@ -375,10 +394,14 @@ function sourceStrip(source) {
   wrap.appendChild(document.createTextNode(parts.join(" · ")));
   wrap.appendChild(document.createTextNode(" "));
   wrap.appendChild(statusChip(source.status || "archived"));
+  if (citation) {
+    wrap.setAttribute("aria-label", S("drawerTitle"));
+    wrap.addEventListener("click", () => openChunk(citation.source_file, citation.page));
+  }
   return wrap;
 }
 
-// ---------- featured cards (bilingual) ----------
+// ---------- ballot list: short scannable rows; tap one for the detail view ----------
 async function loadCards() {
   const wrap = $("cards");
   try {
@@ -387,15 +410,15 @@ async function loadCards() {
     wrap.innerHTML = "";
     for (const c of cards) {
       const b = document.createElement("button");
-      b.type = "button"; b.className = "topic-card";
-      const t = document.createElement("span"); t.className = "topic-card-title"; t.textContent = c.title;
+      b.type = "button"; b.className = "topic-row";
+      const t = document.createElement("span"); t.className = "topic-row-title"; t.textContent = c.title;
       b.appendChild(t);
       if (c.topic) {
-        const d = document.createElement("span"); d.className = "topic-card-desc"; d.textContent = c.topic;
+        const d = document.createElement("span"); d.className = "topic-row-desc"; d.textContent = c.topic;
         b.appendChild(d);
       }
-      const chip = document.createElement("span"); chip.className = "topic-card-chip"; chip.textContent = S("verifiedChip");
-      b.appendChild(chip);
+      const chev = document.createElement("span"); chev.className = "topic-row-chev"; chev.textContent = "›";
+      b.appendChild(chev);
       b.addEventListener("click", () => loadFeatured(c.id));
       wrap.appendChild(b);
     }
@@ -419,6 +442,7 @@ async function loadFeatured(id) {
   const lang = currentLang();
   const box = $("ballotResult");
   box.hidden = false;
+  $("cards").hidden = true; // focused detail view: list steps aside
   $("resultLoading").hidden = false;
   $("resultLoadingText").textContent = S("loadingExample");
   $("resultSections").innerHTML = "";
@@ -436,16 +460,19 @@ async function loadFeatured(id) {
     }
     $("resultLoading").hidden = true;
     $("resTitleText").textContent = data.title;
+    const firstCite = (data.claims || []).map((c) => c.citation).find(Boolean) || null;
     const srcBox = $("resSource");
     srcBox.innerHTML = "";
     if (data.source && data.source.agency) {
-      srcBox.appendChild(sourceStrip(data.source));
+      srcBox.appendChild(sourceStrip(data.source, firstCite));
       srcBox.hidden = false;
     } else {
       srcBox.hidden = true;
     }
     const badge = $("featuredBadge");
     badge.hidden = false; badge.textContent = S("featuredBadge");
+    const vline = $("verifiedLine");
+    vline.hidden = false; vline.textContent = S("verifiedExplainer");
     const groups = [
       {kind: "summary", label: S("summaryLabel"), items: []},
       {kind: "impact_pass", label: S("impactPass"), items: []},
@@ -477,6 +504,13 @@ async function loadFeatured(id) {
     $("honestNote").hidden = false;
   }
 }
+
+// ---------- ballot back-to-list ----------
+$("ballotBack").addEventListener("click", () => {
+  $("ballotResult").hidden = true;
+  $("cards").hidden = false;
+  stopSpeaking();
+});
 
 // ---------- notices ----------
 async function loadNotices() {
@@ -645,8 +679,18 @@ async function ask() {
 }
 $("askBtn").addEventListener("click", ask);
 $("query").addEventListener("keydown", (e) => { if (e.key === "Enter") ask(); });
+document.querySelectorAll(".example-chip").forEach((c) => {
+  c.addEventListener("click", () => {
+    $("query").value = (c.firstChild ? c.firstChild.textContent : c.textContent).trim();
+    ask();
+  });
+});
 
-// ---------- document upload ----------
+// ---------- document upload (behind a small toggle) ----------
+$("uploadToggle").addEventListener("click", () => {
+  const w = $("uploadWrap");
+  w.hidden = !w.hidden;
+});
 $("uploadBtn").addEventListener("click", () => $("docFile").click());
 $("docFile").addEventListener("change", async () => {
   const f = $("docFile").files[0];
@@ -665,7 +709,7 @@ $("docFile").addEventListener("change", async () => {
     if (!res.ok || !data.ok) throw new Error(data.error || "upload failed");
     $("uploadText").textContent = data.text;
     if (data.note === "extracted_text_only") {
-      $("uploadNote").textContent = "Text extracted. Summaries need an AI key — showing the document text for now.";
+      $("uploadNote").textContent = "Text extracted. I can't summarize it yet — showing the document text for now.";
       $("uploadNote").hidden = false;
     }
   } catch (e) {
@@ -697,6 +741,7 @@ function toggleChat(open) {
   const p = $("chatPanel");
   const willOpen = open === undefined ? p.hidden : open;
   p.hidden = !willOpen;
+  $("chatFab").style.display = willOpen ? "none" : "";
   if (willOpen && !chatGreeted) {
     chatGreeted = true;
     const d = chatBubbleAI();

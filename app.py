@@ -581,8 +581,8 @@ def ask():
             )
         else:
             message = (
-                "Live summaries need an LLM key — "
-                "here are the sources we found."
+                "I can't answer that right now — "
+                "here are the official sources I found."
             )
         return jsonify(
             {

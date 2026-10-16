@@ -31,6 +31,7 @@
       {% endfor %}
     </div>
     <p class="picker-note" id="pickerNote" hidden></p>
+    <p class="picker-legend" id="pickerLegend"></p>
   </section>
 
   <!-- Auth portal -->
@@ -98,6 +99,7 @@ function paintPicker() {
   $("regPassL").textContent = S(pendingLang, "passwordHint");
   $("regBtn").textContent = S(pendingLang, "registerTab");
   $("authNote").textContent = S(pendingLang, "authNoteText");
+  $("pickerLegend").textContent = S(pendingLang, "pickerLegend");
   const note = $("pickerNote");
   if (!has && pendingLang !== "en") {
     note.hidden = false;
